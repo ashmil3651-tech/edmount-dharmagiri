@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Facilities - Edmount Dharmagiri</title>
+    <link rel="icon" type="image/png" href="images/Untitled-removebg-preview.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+   <style>
+        * { font-family: 'Poppins', sans-serif; margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
+        body { background: linear-gradient(135deg, #f0f4f8 0%, #d9e8f5 100%); min-height: 100vh; overflow-x: hidden; }
+        
+        .navbar { position: sticky; top: 0; z-index: 1000; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); background: rgba(255,255,255,0.92); box-shadow: 0 4px 20px rgba(0,51,102,0.08); padding: 8px 0; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        .navbar.scrolled { box-shadow: 0 8px 30px rgba(0,51,102,0.15); background: rgba(255,255,255,0.98); }
+        .nav-link { position: relative; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); font-size: 14px; }
+        .nav-link::after { content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 3px; background: linear-gradient(90deg, #003366, #10b981); transition: width 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); border-radius: 2px; }
+        .nav-link:hover { color: #003366; transform: translateY(-1px); }
+        .nav-link:hover::after { width: 100%; }
+        
+        .menu-btn { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 8px; background: none; border: none; transition: all 0.3s ease; }
+        .menu-btn:hover span { background: #10b981; }
+        .menu-btn span { width: 28px; height: 3px; background: #003366; border-radius: 3px; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        .menu-btn.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 6px); }
+        .menu-btn.active span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+        .menu-btn.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -6px); }
+        .mobile-menu { display: none; flex-direction: column; gap: 12px; padding: 16px 20px 20px; background: rgba(255,255,255,0.98); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-radius: 0 0 20px 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); animation: slideDown 0.3s ease; }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        .mobile-menu.open { display: flex; }
+        .mobile-menu a { color: #1e293b; font-weight: 500; padding: 10px 0; border-bottom: 1px solid rgba(0,51,102,0.06); transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        .mobile-menu a:hover { color: #003366; padding-left: 12px; border-color: #10b981; }
+        .mobile-menu a:last-child { border-bottom: none; }
+        
+        @media (max-width: 767px) {
+            .menu-btn { display: flex; }
+            .desktop-nav { display: none; }
+            .navbar .btn-primary { padding: 8px 14px; font-size: 12px; }
+        }
+        @media (min-width: 768px) {
+            .mobile-menu { display: none !important; }
+            .desktop-nav { display: flex !important; }
+        }
+        
+        [data-scroll-animate] { opacity: 0; }
+        
+        .btn-primary { background: linear-gradient(135deg, #003366, #1a4d7a); transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); position: relative; overflow: hidden; display: inline-block; }
+        .btn-primary::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: linear-gradient(45deg, transparent, rgba(255,255,255,0.15), transparent); transform: rotate(45deg) translateX(-100%); transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        .btn-primary:hover { transform: translateY(-3px) scale(1.03); box-shadow: 0 20px 50px rgba(0,51,102,0.4); }
+        .btn-primary:hover::before { transform: rotate(45deg) translateX(100%); }
+        .btn-primary:active { transform: scale(0.95); }
+        
+        .logo-hover { transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        .logo-container:hover .logo-hover { transform: rotate(8deg) scale(1.08); }
+        .logo-container:active .logo-hover { transform: rotate(5deg) scale(0.95); }
+        
+        .floating-bg { animation: float 6s ease-in-out infinite; }
+        @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-15px); } }
+        .floating-bg-2 { animation: float2 8s ease-in-out infinite; }
+        @keyframes float2 { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-20px); } }
+        
+        .facility-card { background: white; border-radius: 14px; padding: 18px 16px; box-shadow: 0 4px 20px rgba(0,51,102,0.1); border-left: 4px solid #0066cc; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); position: relative; overflow: hidden; }
+        .facility-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(135deg, rgba(0,51,102,0.03), rgba(16,185,129,0.02)); opacity: 0; transition: opacity 0.4s ease; }
+        .facility-card:hover { transform: translateX(10px) scale(1.02); box-shadow: 0 20px 45px rgba(0,51,102,0.2); border-left-color: #10b981; }
+        .facility-card:hover::before { opacity: 1; }
+        .facility-card:hover .facility-icon { animation: bounceIcon 0.6s ease; }
+        @keyframes bounceIcon { 0%, 100% { transform: scale(1); } 30% { transform: scale(1.3) rotate(5deg); } 60% { transform: scale(0.9) rotate(-5deg); } }
+        .facility-card:active { transform: scale(0.97); }
+        
+        .amenity-card { background: white; padding: 16px 12px; border-radius: 12px; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); border: 1px solid rgba(0,51,102,0.06); position: relative; overflow: hidden; }
+        .amenity-card::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #003366, #10b981); transform: scaleX(0); transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        .amenity-card:hover { transform: translateY(-8px) scale(1.04); box-shadow: 0 20px 45px rgba(0,51,102,0.15); border-color: #10b981; }
+        .amenity-card:hover::after { transform: scaleX(1); }
+        .amenity-card:hover .amenity-icon { animation: bounceIcon 0.6s ease; }
+        .amenity-card:active { transform: scale(0.97); }
+        
+        .video-container { position: relative; overflow: hidden; border-radius: 16px; box-shadow: 0 12px 40px rgba(0,51,102,0.15); background: #000; aspect-ratio: 16/9; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        .video-container:hover { transform: scale(1.01); box-shadow: 0 20px 60px rgba(0,51,102,0.2); }
+        .video-container video { width: 100%; height: 100%; object-fit: cover; }
+        
+        .video-controls { position: absolute; bottom: 0; left: 0; right: 0; padding: 16px 20px; background: linear-gradient(transparent, rgba(0,0,0,0.85)); display: flex; align-items: center; gap: 14px; opacity: 0; transition: all 0.4s ease; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
+        .video-container:hover .video-controls { opacity: 1; }
+        .video-container:hover .video-overlay { opacity: 0; }
+        .video-controls button { background: rgba(255,255,255,0.15); border: none; color: white; width: 38px; height: 38px; border-radius: 50%; cursor: pointer; font-size: 15px; transition: all 0.3s ease; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .video-controls button:hover { background: rgba(255,255,255,0.35); transform: scale(1.1); }
+        .video-controls button:active { transform: scale(0.9); }
+        .video-controls input[type="range"] { flex: 1; height: 4px; -webkit-appearance: none; appearance: none; background: rgba(255,255,255,0.3); border-radius: 2px; outline: none; transition: all 0.3s ease; cursor: pointer; }
+        .video-controls input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 14px; height: 14px; border-radius: 50%; background: #10b981; cursor: pointer; box-shadow: 0 2px 10px rgba(16,185,129,0.4); }
+        .video-controls input[type="range"]::-moz-range-thumb { width: 14px; height: 14px; border-radius: 50%; background: #10b981; cursor: pointer; }
+        .video-controls .time { color: white; font-size: 0.75rem; min-width: 80px; font-family: monospace; opacity: 0.8; }
+        .video-controls .volume-btn { width: 34px; height: 34px; font-size: 13px; }
+        .video-controls .volume-slider { width: 60px; flex: none; }
+        @media (max-width: 640px) {
+            .video-controls .volume-slider { width: 40px; }
+            .video-controls .time { font-size: 0.65rem; min-width: 60px; }
+            .video-controls { padding: 12px 14px; gap: 10px; }
+            .video-controls button { width: 32px; height: 32px; font-size: 12px; }
+        }
+        
+        .video-overlay { position: absolute; bottom: 0; left: 0; right: 0; padding: 20px 24px; background: linear-gradient(transparent, rgba(0,51,102,0.8)); pointer-events: none; transition: all 0.4s ease; }
+        .video-container:hover .video-overlay { opacity: 0; }
+        .video-overlay h3 { color: white; font-size: clamp(0.9rem, 1.5vw, 1.3rem); font-weight: 700; text-shadow: 0 2px 10px rgba(0,0,0,0.3); }
+        .video-overlay p { color: rgba(255,255,255,0.85); font-size: clamp(0.7rem, 1vw, 0.9rem); text-shadow: 0 2px 10px rgba(0,0,0,0.3); }
+        
+        .autoplay-badge { position: absolute; top: 16px; right: 16px; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); padding: 6px 14px; border-radius: 20px; font-size: 0.7rem; color: white; display: flex; align-items: center; gap: 6px; z-index: 5; border: 1px solid rgba(255,255,255,0.1); }
+        .autoplay-badge .dot { width: 8px; height: 8px; border-radius: 50%; background: #10b981; animation: blink 1.5s ease-in-out infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+        
+        .gallery-section { background: rgba(255,255,255,0.5); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-radius: 20px; border: 1px solid rgba(255,255,255,0.8); }
+        .gallery-tab { padding: 10px 24px; border-radius: 30px; border: 2px solid transparent; cursor: pointer; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); font-weight: 600; font-size: 0.9rem; background: rgba(255,255,255,0.6); }
+        .gallery-tab:hover { transform: translateY(-2px); border-color: #003366; }
+        .gallery-tab.active { background: #003366; color: white; border-color: #003366; box-shadow: 0 8px 25px rgba(0,51,102,0.25); }
+        .gallery-tab:active { transform: scale(0.95); }
+        
+        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
+        .gallery-item { border-radius: 14px; overflow: hidden; position: relative; aspect-ratio: 1/1; cursor: pointer; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        .gallery-item:hover { transform: translateY(-6px) scale(1.03); box-shadow: 0 20px 40px rgba(0,51,102,0.15); }
+        .gallery-item img, .gallery-item video { width: 100%; height: 100%; object-fit: cover; }
+        .gallery-item .gallery-overlay { position: absolute; bottom: 0; left: 0; right: 0; padding: 12px 16px; background: linear-gradient(transparent, rgba(0,51,102,0.8)); opacity: 0; transition: all 0.4s ease; }
+        .gallery-item:hover .gallery-overlay { opacity: 1; }
+        .gallery-item .gallery-overlay span { color: white; font-size: 0.8rem; font-weight: 500; }
+        .gallery-item .play-icon { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 40px; color: white; text-shadow: 0 4px 20px rgba(0,0,0,0.5); opacity: 0.8; transition: all 0.3s ease; }
+        .gallery-item:hover .play-icon { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
+        
+        .lightbox { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.92); z-index: 9999; justify-content: center; align-items: center; padding: 20px; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+        .lightbox.active { display: flex; }
+        .lightbox img, .lightbox video { max-width: 90%; max-height: 85%; object-fit: contain; border-radius: 12px; box-shadow: 0 30px 80px rgba(0,0,0,0.5); animation: zoomIn 0.4s ease; }
+        @keyframes zoomIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .lightbox .close-btn { position: absolute; top: 20px; right: 30px; font-size: 40px; color: white; cursor: pointer; transition: all 0.3s ease; background: none; border: none; }
+        .lightbox .close-btn:hover { transform: rotate(90deg) scale(1.1); color: #10b981; }
+        .lightbox .caption { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); color: white; font-size: 1.1rem; background: rgba(0,0,0,0.5); padding: 10px 24px; border-radius: 30px; text-align: center; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
+        
+        .footer { background: linear-gradient(135deg, #0a1a2e, #003366); border-top: 4px solid #10b981; }
+        .footer-link { transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); display: inline-block; padding: 4px 0; }
+        .footer-link:hover { transform: translateX(6px); color: #10b981; }
+        .footer-social { transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); display: inline-flex; align-items: center; gap: 0.5rem; padding: 6px 12px; border-radius: 8px; }
+        .footer-social:hover { transform: translateX(6px) scale(1.05); color: #10b981; background: rgba(16,185,129,0.1); }
+        
+        .footer-brand { font-size: clamp(1.5rem, 3vw, 2.5rem); font-weight: 900; line-height: 1; }
+        .footer-brand-sub { font-size: clamp(0.7rem, 1vw, 0.9rem); letter-spacing: 0.2em; }
+        
+        .sister-card { transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); border-radius: 16px; overflow: hidden; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); padding: 16px; text-align: center; display: block; text-decoration: none; }
+        .sister-card:hover { transform: translateY(-6px) scale(1.03); box-shadow: 0 20px 50px rgba(0,0,0,0.3); border-color: rgba(16,185,129,0.3); }
+        .sister-card img { width: 100%; max-height: 80px; object-fit: contain; transition: transform 0.4s ease; }
+        .sister-card:hover img { transform: scale(1.05); }
+        .sister-card .sister-title { font-size: 1rem; font-weight: 700; color: white; margin-top: 6px; }
+        .sister-card .sister-sub { font-size: 0.75rem; color: #10b981; font-weight: 600; }
+        .sister-card .sister-desc { font-size: 0.65rem; color: #93c5fd; margin-top: 2px; }
+        
+        .section-title { font-size: clamp(1.5rem, 4vw, 3rem); }
+        .pulse { animation: pulse 2s ease-in-out infinite; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-2 flex justify-between items-center">
+            <a href="index.html" class="flex items-center gap-2 sm:gap-3 logo-container">
+                <img src="images/Untitled-removebg-preview.png" alt="Edmount Dharmagiri Logo" class="w-8 sm:w-12 h-8 sm:h-12 object-contain logo-hover" />
+                <div class="hidden sm:block">
+                    <span class="text-lg sm:text-xl font-extrabold text-blue-900 block leading-none">Edmount</span>
+                    <span class="text-[10px] sm:text-xs font-bold text-emerald-600 tracking-wider uppercase">Dharmagiri</span>
+                    <span class="text-[8px] sm:text-[10px] font-bold text-blue-500 tracking-wider uppercase block">For Boys</span>
+                </div>
+                <div class="sm:hidden">
+                    <span class="text-base font-extrabold text-blue-900 block leading-tight">Edmount</span>
+                    <span class="text-[8px] font-bold text-emerald-600 tracking-wider uppercase">Dharmagiri</span>
+                </div>
+            </a>
+            
+            <div class="desktop-nav hidden md:flex gap-4 lg:gap-8">
+                <a href="index.html" class="nav-link text-gray-700 font-medium">Home</a>
+                <a href="about.html" class="nav-link text-gray-700 font-medium">About</a>
+                <a href="academics.html" class="nav-link text-gray-700 font-medium">Academics</a>
+                <a href="facilities.html" class="nav-link text-blue-900 font-bold">Facilities</a>
+                <a href="admission.html" class="nav-link text-gray-700 font-medium">Admission</a>
+            </div>
+            
+            <div class="flex items-center gap-2 sm:gap-3">
+                <a href="admission.html" class="btn-primary text-white px-3 sm:px-6 py-1.5 sm:py-2.5 rounded-lg font-semibold shadow-md text-xs sm:text-sm">Apply Now</a>
+                <button class="menu-btn md:hidden" id="menuBtn" aria-label="Toggle menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+        
+        <div class="mobile-menu md:hidden" id="mobileMenu">
+            <a href="index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="academics.html">Academics</a>
+            <a href="facilities.html" class="text-blue-900 font-bold">Facilities</a>
+            <a href="admission.html">Admission</a>
+        </div>
+    </nav>
+
+    <!-- Page Title -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 py-10 sm:py-16 text-center relative">
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-48 sm:w-80 md:w-96 h-48 sm:h-80 md:h-96 bg-blue-200/40 rounded-full blur-3xl -z-10 floating-bg"></div>
+        <div class="absolute bottom-0 right-0 w-36 sm:w-64 h-36 sm:h-64 bg-emerald-200/20 rounded-full blur-3xl -z-10 floating-bg-2"></div>
+        <div class="inline-block bg-emerald-100 text-emerald-700 px-3 sm:px-6 py-1 sm:py-2 rounded-full text-[10px] sm:text-sm font-bold mb-3 sm:mb-4" data-scroll-animate data-animate-type="scale">🏗️ Campus Infrastructure</div>
+        <h1 class="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-blue-900 tracking-tight facilities-title" data-scroll-animate data-animate-type="fade" data-delay="100">World-Class Facilities</h1>
+        <p class="text-base sm:text-xl text-emerald-700 font-semibold mt-2 sm:mt-4 facilities-subtitle" data-scroll-animate data-animate-type="fade" data-delay="200">Everything you need to thrive</p>
+    </section>
+
+    <!-- Video Section -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-6">
+        <div class="video-container" data-scroll-animate data-animate-type="scale">
+            <div class="autoplay-badge">
+                <span class="dot"></span>
+                <span>Auto-Playing</span>
+            </div>
+            <video id="campusVideo" playsinline preload="auto" loop muted>
+                <source src="images/videos/campus-tour.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <div class="video-overlay">
+                <h3 class="video-title">🏛️ Experience Our Campus</h3>
+                <p class="video-desc">Take a virtual tour of our world-class facilities</p>
+            </div>
+            <div class="video-controls" id="videoControls">
+                <button id="playPauseBtn" title="Play/Pause">⏸</button>
+                <input type="range" id="progressBar" min="0" max="100" value="0">
+                <span class="time" id="timeDisplay">0:00 / 0:00</span>
+                <button id="muteBtn" class="volume-btn" title="Mute/Unmute">🔊</button>
+                <input type="range" id="volumeBar" class="volume-slider" min="0" max="1" step="0.1" value="0.8">
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
+        <div class="gallery-section p-4 sm:p-8" data-scroll-animate data-animate-type="scale">
+            <div class="text-center mb-6">
+                <span class="text-emerald-600 font-bold text-sm uppercase tracking-wider">📸 Our Gallery</span>
+                <h2 class="section-title font-extrabold text-blue-900 mt-1">Campus Moments</h2>
+                <p class="text-slate-500 mt-1 text-sm">Explore our campus through images and videos</p>
+            </div>
+
+            <div class="flex flex-wrap gap-2 sm:gap-3 justify-center mb-6">
+                <button class="gallery-tab active" data-filter="all">📷 All</button>
+                <button class="gallery-tab" data-filter="images">🖼️ Images</button>
+                <button class="gallery-tab" data-filter="videos">🎬 Videos</button>
+            </div>
+
+            <div class="gallery-grid" id="galleryGrid">
+                <!-- Campus Images -->
+                <div class="gallery-item" data-type="images" data-scroll-animate data-animate-type="scale">
+                    <img src="images/gallery/campus1.jpg" alt="Campus View" loading="lazy" onerror="this.parentElement.innerHTML='<div class=flex items-center justify-center h-full bg-gradient-to-br from-blue-900 to-emerald-800 text-white text-4xl>🏛️</div>'" />
+                    <div class="gallery-overlay"></div>
+                </div>
+                <div class="gallery-item" data-type="images" data-scroll-animate data-animate-type="scale" data-delay="120">
+                    <img src="images/gallery/campus2.jpg" alt="Green Campus" loading="lazy" onerror="this.parentElement.innerHTML='<div class=flex items-center justify-center h-full bg-gradient-to-br from-emerald-800 to-teal-800 text-white text-4xl>🌳</div>'" />
+                    <div class="gallery-overlay"></div>
+                </div>
+
+                <!-- Academics Images -->
+                <div class="gallery-item" data-type="images" data-scroll-animate data-animate-type="scale" data-delay="80">
+                    <img src="images/gallery/academics1.jpg" alt="Smart Classroom" loading="lazy" onerror="this.parentElement.innerHTML='<div class=flex items-center justify-center h-full bg-gradient-to-br from-blue-800 to-purple-800 text-white text-4xl>📚</div>'" />
+                    <div class="gallery-overlay"></div>
+                </div>
+                <div class="gallery-item" data-type="images" data-scroll-animate data-animate-type="scale" data-delay="180">
+                    <img src="images/gallery/academics2.jpg" alt="Library" loading="lazy" onerror="this.parentElement.innerHTML='<div class=flex items-center justify-center h-full bg-gradient-to-br from-indigo-800 to-blue-800 text-white text-4xl>📖</div>'" />
+                    <div class="gallery-overlay"></div>
+                </div>
+
+                <!-- Sports Images -->
+                <div class="gallery-item" data-type="images" data-scroll-animate data-animate-type="scale" data-delay="140">
+                    <img src="images/gallery/sports1.jpg" alt="Sports Complex" loading="lazy" onerror="this.parentElement.innerHTML='<div class=flex items-center justify-center h-full bg-gradient-to-br from-emerald-800 to-blue-800 text-white text-4xl>⚽</div>'" />
+                    <div class="gallery-overlay"></div>
+                </div>
+                <div class="gallery-item" data-type="images" data-scroll-animate data-animate-type="scale" data-delay="220">
+                    <img src="images/gallery/sports2.jpg" alt="Sports Activities" loading="lazy" onerror="this.parentElement.innerHTML='<div class=flex items-center justify-center h-full bg-gradient-to-br from-green-800 to-emerald-800 text-white text-4xl>🏏</div>'" />
+                    <div class="gallery-overlay"></div>
+                </div>
+
+                <!-- Hostel Images -->
+                <div class="gallery-item" data-type="images" data-scroll-animate data-animate-type="scale" data-delay="100">
+                    <img src="images/gallery/hostel1.jpg" alt="Residential Hostel" loading="lazy" onerror="this.parentElement.innerHTML='<div class=flex items-center justify-center h-full bg-gradient-to-br from-blue-900 to-indigo-800 text-white text-4xl>🏠</div>'" />
+                    <div class="gallery-overlay"></div>
+                </div>
+                <div class="gallery-item" data-type="images" data-scroll-animate data-animate-type="scale" data-delay="200">
+                    <img src="images/gallery/hostel2.jpg" alt="Hostel Rooms" loading="lazy" onerror="this.parentElement.innerHTML='<div class=flex items-center justify-center h-full bg-gradient-to-br from-slate-800 to-blue-800 text-white text-4xl>🛏️</div>'" />
+                    <div class="gallery-overlay"></div>
+                </div>
+
+                <!-- Events Images -->
+                <div class="gallery-item" data-type="images" data-scroll-animate data-animate-type="scale" data-delay="60">
+                    <img src="images/gallery/events1.jpg" alt="School Events" loading="lazy" onerror="this.parentElement.innerHTML='<div class=flex items-center justify-center h-full bg-gradient-to-br from-purple-800 to-pink-800 text-white text-4xl>🎉</div>'" />
+                    <div class="gallery-overlay"></div>
+                </div>
+                <div class="gallery-item" data-type="images" data-scroll-animate data-animate-type="scale" data-delay="160">
+                    <img src="images/gallery/events2.jpg" alt="Cultural Events" loading="lazy" onerror="this.parentElement.innerHTML='<div class=flex items-center justify-center h-full bg-gradient-to-br from-rose-800 to-orange-800 text-white text-4xl>🎭</div>'" />
+                    <div class="gallery-overlay"></div>
+                </div>
+
+                <!-- Videos -->
+                <div class="gallery-item" data-type="videos" data-scroll-animate data-animate-type="scale" data-delay="50">
+                    <video muted playsinline preload="metadata">
+                        <source src="images/videos/campus-tour.mp4" type="video/mp4">
+                    </video>
+                    <div class="play-icon">▶</div>
+                    <div class="gallery-overlay"><span>🎬 Campus Tour</span></div>
+                </div>
+                <div class="gallery-item" data-type="videos" data-scroll-animate data-animate-type="scale" data-delay="130">
+                    <video muted playsinline preload="metadata">
+                        <source src="images/videos/campus-life.mp4" type="video/mp4">
+                    </video>
+                    <div class="play-icon">▶</div>
+                    <div class="gallery-overlay"><span>🎬</span></div>
+                </div>
+                <div class="gallery-item" data-type="videos" data-scroll-animate data-animate-type="scale" data-delay="210">
+                    <video muted playsinline preload="metadata">
+                        <source src="images/videos/sports-day.mp4" type="video/mp4">
+                    </video>
+                    <div class="play-icon">▶</div>
+                    <div class="gallery-overlay"><span>🎬 edmount</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Facilities Grid -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-12">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-6">
+            <div class="facility-card" data-scroll-animate data-animate-type="left">
+                <div class="flex items-start gap-3 sm:gap-4">
+                    <div class="facility-icon text-3xl sm:text-5xl flex-shrink-0">🔬</div>
+                    <div class="flex-1">
+                        <h3 class="text-base sm:text-2xl font-bold text-blue-900 mb-1 sm:mb-2">Modern Science Labs</h3>
+                        <p class="text-gray-700 text-[10px] sm:text-sm">State-of-the-art laboratory equipped with advanced instruments.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="facility-card" data-scroll-animate data-animate-type="right" data-delay="50">
+                <div class="flex items-start gap-3 sm:gap-4">
+                    <div class="facility-icon text-3xl sm:text-5xl flex-shrink-0">💻</div>
+                    <div class="flex-1">
+                        <h3 class="text-base sm:text-2xl font-bold text-blue-900 mb-1 sm:mb-2">Computer Labs</h3>
+                        <p class="text-gray-700 text-[10px] sm:text-sm">High-speed internet, modern workstations, and software.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="facility-card" data-scroll-animate data-animate-type="left" data-delay="100">
+                <div class="flex items-start gap-3 sm:gap-4">
+                    <div class="facility-icon text-3xl sm:text-5xl flex-shrink-0">📚</div>
+                    <div class="flex-1">
+                        <h3 class="text-base sm:text-2xl font-bold text-blue-900 mb-1 sm:mb-2">Central Library</h3>
+                        <p class="text-gray-700 text-[10px] sm:text-sm">Extensive collection of books, journals, and e-books.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="facility-card" data-scroll-animate data-animate-type="right" data-delay="150">
+                <div class="flex items-start gap-3 sm:gap-4">
+                    <div class="facility-icon text-3xl sm:text-5xl flex-shrink-0">⚽</div>
+                    <div class="flex-1">
+                        <h3 class="text-base sm:text-2xl font-bold text-blue-900 mb-1 sm:mb-2">Sports Complex</h3>
+                        <p class="text-gray-700 text-[10px] sm:text-sm">Football, basketball, volleyball, and gymnasium.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="facility-card" data-scroll-animate data-animate-type="left" data-delay="200">
+                <div class="flex items-start gap-3 sm:gap-4">
+                    <div class="facility-icon text-3xl sm:text-5xl flex-shrink-0">🏠</div>
+                    <div class="flex-1">
+                        <h3 class="text-base sm:text-2xl font-bold text-blue-900 mb-1 sm:mb-2">Residential Hostels</h3>
+                        <p class="text-gray-700 text-[10px] sm:text-sm">Comfortable rooms with modern amenities and 24/7 security.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="facility-card" data-scroll-animate data-animate-type="right" data-delay="250">
+                <div class="flex items-start gap-3 sm:gap-4">
+                    <div class="facility-icon text-3xl sm:text-5xl flex-shrink-0">🍽️</div>
+                    <div class="flex-1">
+                        <h3 class="text-base sm:text-2xl font-bold text-blue-900 mb-1 sm:mb-2">Cafeteria & Dining</h3>
+                        <p class="text-gray-700 text-[10px] sm:text-sm">Hygienic kitchen with nutritious, balanced meals.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="facility-card" data-scroll-animate data-animate-type="left" data-delay="300">
+                <div class="flex items-start gap-3 sm:gap-4">
+                    <div class="facility-icon text-3xl sm:text-5xl flex-shrink-0">🌐</div>
+                    <div class="flex-1">
+                        <h3 class="text-base sm:text-2xl font-bold text-blue-900 mb-1 sm:mb-2">WiFi Campus</h3>
+                        <p class="text-gray-700 text-[10px] sm:text-sm">High-speed internet with fiber optic network.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="facility-card" data-scroll-animate data-animate-type="right" data-delay="350">
+                <div class="flex items-start gap-3 sm:gap-4">
+                    <div class="facility-icon text-3xl sm:text-5xl flex-shrink-0">🏥</div>
+                    <div class="flex-1">
+                        <h3 class="text-base sm:text-2xl font-bold text-blue-900 mb-1 sm:mb-2">Medical Center</h3>
+                        <p class="text-gray-700 text-[10px] sm:text-sm">On-campus health center available 24/7.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Residential Features -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 py-10 sm:py-16">
+        <div class="text-center mb-6 sm:mb-12">
+            <span class="text-emerald-600 font-bold text-[10px] sm:text-sm uppercase tracking-wider" data-scroll-animate data-animate-type="fade">Hostel Life</span>
+            <h2 class="section-title font-extrabold text-blue-900 mt-1" data-scroll-animate data-animate-type="scale">Residential Excellence</h2>
+        </div>
+        <div class="bg-gradient-to-r from-blue-50 to-emerald-50 p-4 sm:p-8 rounded-2xl sm:rounded-3xl" data-scroll-animate data-animate-type="scale">
+            <p class="text-xs sm:text-lg text-gray-700 mb-4 sm:mb-8 leading-relaxed">Our boys-exclusive residential batches provide a nurturing environment where students develop independence, discipline, and lasting friendships.</p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
+                <div class="amenity-card" data-scroll-animate data-animate-type="scale">
+                    <div class="amenity-icon text-2xl sm:text-4xl mb-1 sm:mb-3">🔐</div>
+                    <h3 class="font-bold text-blue-900 mb-0.5 sm:mb-1 text-xs sm:text-base">24/7 Security</h3>
+                    <p class="text-gray-600 text-[10px] sm:text-sm">CCTV surveillance and trained security</p>
+                </div>
+                <div class="amenity-card" data-scroll-animate data-animate-type="scale" data-delay="100">
+                    <div class="amenity-icon text-2xl sm:text-4xl mb-1 sm:mb-3">📅</div>
+                    <h3 class="font-bold text-blue-900 mb-0.5 sm:mb-1 text-xs sm:text-base">Health Checkups</h3>
+                    <p class="text-gray-600 text-[10px] sm:text-sm">Periodic medical examinations</p>
+                </div>
+                <div class="amenity-card" data-scroll-animate data-animate-type="scale" data-delay="200">
+                    <div class="amenity-icon text-2xl sm:text-4xl mb-1 sm:mb-3">👥</div>
+                    <h3 class="font-bold text-blue-900 mb-0.5 sm:mb-1 text-xs sm:text-base">Counseling Support</h3>
+                    <p class="text-gray-600 text-[10px] sm:text-sm">Dedicated mentors for guidance</p>
+                </div>
+                <div class="amenity-card" data-scroll-animate data-animate-type="scale" data-delay="300">
+                    <div class="amenity-icon text-2xl sm:text-4xl mb-1 sm:mb-3">🎮</div>
+                    <h3 class="font-bold text-blue-900 mb-0.5 sm:mb-1 text-xs sm:text-base">Recreation Areas</h3>
+                    <p class="text-gray-600 text-[10px] sm:text-sm">Games and activities</p>
+                </div>
+                <div class="amenity-card" data-scroll-animate data-animate-type="scale" data-delay="400">
+                    <div class="amenity-icon text-2xl sm:text-4xl mb-1 sm:mb-3">📖</div>
+                    <h3 class="font-bold text-blue-900 mb-0.5 sm:mb-1 text-xs sm:text-base">Study Halls</h3>
+                    <p class="text-gray-600 text-[10px] sm:text-sm">Quiet spaces for focused study</p>
+                </div>
+                <div class="amenity-card" data-scroll-animate data-animate-type="scale" data-delay="500">
+                    <div class="amenity-icon text-2xl sm:text-4xl mb-1 sm:mb-3">🧹</div>
+                    <h3 class="font-bold text-blue-900 mb-0.5 sm:mb-1 text-xs sm:text-base">Housekeeping</h3>
+                    <p class="text-gray-600 text-[10px] sm:text-sm">Daily cleaning and maintenance</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Campus Highlights -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-12">
+        <div class="text-center mb-6 sm:mb-12">
+            <span class="text-emerald-600 font-bold text-[10px] sm:text-sm uppercase tracking-wider" data-scroll-animate data-animate-type="fade">Beyond Classrooms</span>
+            <h2 class="section-title font-extrabold text-blue-900 mt-1" data-scroll-animate data-animate-type="scale">Campus Highlights</h2>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-6">
+            <div class="bg-white p-5 sm:p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 touch-feedback" data-scroll-animate data-animate-type="left">
+                <div class="flex items-center gap-3 mb-3 sm:mb-4">
+                    <div class="text-2xl sm:text-4xl pulse">🏛️</div>
+                    <h3 class="text-base sm:text-2xl font-bold text-blue-900">Academic Infrastructure</h3>
+                </div>
+                <ul class="space-y-2 sm:space-y-3">
+                    <li class="flex items-center gap-2 text-[10px] sm:text-base"><span class="text-emerald-600 font-bold">→</span> Smart classrooms with multimedia</li>
+                    <li class="flex items-center gap-2 text-[10px] sm:text-base"><span class="text-emerald-600 font-bold">→</span> Seminar halls and auditorium</li>
+                    <li class="flex items-center gap-2 text-[10px] sm:text-base"><span class="text-emerald-600 font-bold">→</span> Subject-specific resource centers</li>
+                </ul>
+            </div>
+            <div class="bg-white p-5 sm:p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 touch-feedback" data-scroll-animate data-animate-type="right" data-delay="100">
+                <div class="flex items-center gap-3 mb-3 sm:mb-4">
+                    <div class="text-2xl sm:text-4xl pulse">🎨</div>
+                    <h3 class="text-base sm:text-2xl font-bold text-blue-900">Co-curricular Facilities</h3>
+                </div>
+                <ul class="space-y-2 sm:space-y-3">
+                    <li class="flex items-center gap-2 text-[10px] sm:text-base"><span class="text-emerald-600 font-bold">→</span> Music and arts practice rooms</li>
+                    <li class="flex items-center gap-2 text-[10px] sm:text-base"><span class="text-emerald-600 font-bold">→</span> Debate and public speaking hall</li>
+                    <li class="flex items-center gap-2 text-[10px] sm:text-base"><span class="text-emerald-600 font-bold">→</span> Photography and digital media lab</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 py-10 sm:py-16 text-center" data-scroll-animate data-animate-type="scale">
+        <div class="relative">
+            <div class="absolute -top-8 sm:-top-10 left-1/2 -translate-x-1/2 w-40 sm:w-64 h-40 sm:h-64 bg-blue-200/20 rounded-full blur-2xl"></div>
+            <h2 class="text-xl sm:text-3xl md:text-4xl font-extrabold text-blue-900 mb-2 sm:mb-4">Experience Excellence</h2>
+            <p class="text-sm sm:text-lg text-gray-700 mb-4 sm:mb-8">Visit our campus and experience world-class facilities firsthand</p>
+            <a href="admission.html" class="btn-primary text-white px-6 sm:px-12 py-2.5 sm:py-4 rounded-xl font-bold shadow-xl inline-block text-sm sm:text-lg">Schedule Campus Visit 🚀</a>
+        </div>
+    </section>
+
+   <!-- Footer -->
+<footer class="footer text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
+        
+        <!-- Brand Row -->
+        <div class="text-center mb-10">
+            <div class="flex items-center justify-center gap-3 mb-2">
+                <img src="images/Untitled-removebg-preview.png" alt="Edmount Dharmagiri Logo" class="w-12 sm:w-16 h-12 sm:h-16 object-contain" />
+                <div>
+                    <div class="footer-brand">EDMOUNT <span class="text-emerald-400">DHARMAGIRI</span></div>
+                    <div class="footer-brand-sub text-emerald-400 tracking-[0.3em]">FOR BOYS</div>
+                </div>
+            </div>
+            <p class="text-blue-300 text-sm mt-2">Residential School with Moral &amp; Modern Education</p>
+        </div>
+
+        <!-- Footer Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-12">
+            
+            <!-- Quick Links -->
+            <div>
+                <h4 class="text-emerald-400 font-bold text-lg mb-4 border-b border-emerald-400/20 pb-2">Quick Links</h4>
+                <ul class="space-y-2">
+                    <li><a href="index.html" class="footer-link text-blue-200 hover:text-emerald-400">Home</a></li>
+                    <li><a href="about.html" class="footer-link text-blue-200 hover:text-emerald-400">About Us</a></li>
+                    <li><a href="academics.html" class="footer-link text-blue-200 hover:text-emerald-400">Academic</a></li>
+                    <li><a href="facilities.html" class="footer-link text-blue-200 hover:text-emerald-400">Facilities</a></li>
+                    <li><a href="admission.html" class="footer-link text-blue-200 hover:text-emerald-400">Admission</a></li>
+                    <li><a href="#" class="footer-link text-blue-200 hover:text-emerald-400">Work With Us</a></li>
+                </ul>
+            </div>
+
+            <!-- Follow Us with Real Logos -->
+            <div>
+                <h4 class="text-emerald-400 font-bold text-lg mb-4 border-b border-emerald-400/20 pb-2">Follow Us</h4>
+                <ul class="space-y-2">
+                    <li>
+                        <a href="https://www.instagram.com/edmount_dharmagiri/" target="_blank" rel="noopener noreferrer" class="footer-social text-blue-200 hover:text-emerald-400 transition-colors duration-300 text-sm flex items-center gap-3">
+                            <i class="fab fa-instagram text-xl w-6 text-center"></i> Instagram
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.facebook.com/people/Edmount-Dharmagiri/61572533090786/" target="_blank" rel="noopener noreferrer" class="footer-social text-blue-200 hover:text-emerald-400 transition-colors duration-300 text-sm flex items-center gap-3">
+                            <i class="fab fa-facebook text-xl w-6 text-center"></i> Facebook
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.youtube.com/@EdmountDharmagiri" target="_blank" rel="noopener noreferrer" class="footer-social text-blue-200 hover:text-emerald-400 transition-colors duration-300 text-sm flex items-center gap-3">
+                            <i class="fab fa-youtube text-xl w-6 text-center"></i> YouTube
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="footer-social text-blue-200 hover:text-emerald-400 transition-colors duration-300 text-sm flex items-center gap-3">
+                            <i class="fab fa-linkedin-in text-xl w-6 text-center"></i> LinkedIn
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Contact Us -->
+            <div>
+                <h4 class="text-emerald-400 font-bold text-lg mb-4 border-b border-emerald-400/20 pb-2">Contact Us</h4>
+                <ul class="space-y-3">
+                    <li class="flex items-start gap-3 text-blue-200 text-sm">
+                        <span class="text-emerald-400 mt-1">📍</span>
+                        <span>Dharmagiri Hills, near Calicut International Airport, Kannamangalam, Malappuram Dt. PIN - 676305</span>
+                    </li>
+                    <li class="flex items-center gap-3 text-blue-200 text-sm">
+                        <span class="text-emerald-400">📞</span>
+                        <span>+91-9895644544</span>
+                    </li>
+                    <li class="flex items-center gap-3 text-blue-200 text-sm">
+                        <span class="text-emerald-400">📞</span>
+                        <span>+91-7736911511</span>
+                    </li>
+                    <li class="flex items-center gap-3 text-blue-200 text-sm">
+                        <span class="text-emerald-400">✉️</span>
+                        <span>edmountdharmagiri@gmail.com</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Our Group -->
+            <div>
+                <h4 class="text-emerald-400 font-bold text-lg mb-4 border-b border-emerald-400/20 pb-2">Our Group</h4>
+                <a href="https://mountzaindharmagiri.com/" target="_blank" rel="noopener noreferrer" class="sister-card mb-3">
+                    <img src="images/mount-zain.png" alt="Mount Zain - Dharmagiri" class="mx-auto" />
+                    <div class="sister-title">MOUNT ZAIN</div>
+                    <div class="sister-sub">DHARMAGIRI</div>
+                    <div class="sister-desc">Elite &amp; Exclusive Educational Programs for Girls</div>
+                </a>
+                <div class="sister-card">
+                    <img src="images/dharmagiri-group.png" alt="Dharmagiri Group of Institutions" class="mx-auto" />
+                    <div class="sister-title">DHARMAGIRI</div>
+                    <div class="sister-sub">GROUP OF INSTITUTIONS</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Copyright -->
+        <div class="border-t border-blue-800 mt-10 pt-6 text-center text-blue-400 text-sm">
+            <p>&copy; 2026 <span class="text-white font-semibold">Edmount Dharmagiri</span>. All rights reserved.</p>
+        </div>
+    </div>
+</footer>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox">
+        <button class="close-btn" id="closeLightbox">✕</button>
+        <div id="lightboxContent"></div>
+        <div class="caption" id="lightboxCaption">Image Title</div>
+    </div>
+
+    <script>
+        // ============================================
+        // MOBILE MENU TOGGLE
+        // ============================================
+        const menuBtn = document.getElementById('menuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        let menuOpen = false;
+
+        menuBtn.addEventListener('click', function() {
+            menuOpen = !menuOpen;
+            this.classList.toggle('active');
+            mobileMenu.classList.toggle('open');
+            document.body.style.overflow = menuOpen ? 'hidden' : '';
+        });
+
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                menuBtn.classList.remove('active');
+                mobileMenu.classList.remove('open');
+                document.body.style.overflow = '';
+                menuOpen = false;
+            });
+        });
+
+        // ============================================
+        // NAVBAR SCROLL EFFECT
+        // ============================================
+        window.addEventListener('scroll', function() {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // ============================================
+        // VIDEO PLAYER WITH AUTO-PLAY
+        // ============================================
+        const video = document.getElementById('campusVideo');
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const progressBar = document.getElementById('progressBar');
+        const timeDisplay = document.getElementById('timeDisplay');
+        const muteBtn = document.getElementById('muteBtn');
+        const volumeBar = document.getElementById('volumeBar');
+
+        let isMuted = false;
+
+        video.volume = 0.8;
+
+        function tryAutoPlay() {
+            video.play().then(() => {
+                playPauseBtn.textContent = '⏸';
+            }).catch((error) => {
+                playPauseBtn.textContent = '▶';
+            });
+        }
+
+        video.addEventListener('loadeddata', function() {
+            tryAutoPlay();
+        });
+
+        if (video.readyState >= 2) {
+            tryAutoPlay();
+        }
+
+        playPauseBtn.addEventListener('click', function() {
+            if (video.paused) {
+                video.play();
+                if (video.muted) {
+                    video.muted = false;
+                    isMuted = false;
+                    muteBtn.textContent = '🔊';
+                }
+                playPauseBtn.textContent = '⏸';
+            } else {
+                video.pause();
+                playPauseBtn.textContent = '▶';
+            }
+        });
+
+        video.addEventListener('play', function() {
+            playPauseBtn.textContent = '⏸';
+        });
+
+        video.addEventListener('pause', function() {
+            if (!video.ended) {
+                playPauseBtn.textContent = '▶';
+            }
+        });
+
+        video.addEventListener('ended', function() {
+            playPauseBtn.textContent = '↻';
+        });
+
+        video.addEventListener('timeupdate', function() {
+            const progress = (video.currentTime / video.duration) * 100;
+            progressBar.value = progress;
+            updateTimeDisplay();
+        });
+
+        progressBar.addEventListener('input', function() {
+            const time = (this.value / 100) * video.duration;
+            video.currentTime = time;
+        });
+
+        function updateTimeDisplay() {
+            const current = formatTime(video.currentTime);
+            const duration = formatTime(video.duration);
+            timeDisplay.textContent = current + ' / ' + duration;
+        }
+
+        function formatTime(seconds) {
+            if (isNaN(seconds) || !isFinite(seconds)) return '0:00';
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return mins + ':' + (secs < 10 ? '0' : '') + secs;
+        }
+
+        muteBtn.addEventListener('click', function() {
+            isMuted = !isMuted;
+            video.muted = isMuted;
+            muteBtn.textContent = isMuted ? '🔇' : '🔊';
+            volumeBar.value = isMuted ? 0 : (video.volume || 0.8);
+        });
+
+        volumeBar.addEventListener('input', function() {
+            const value = parseFloat(this.value);
+            video.volume = value;
+            video.muted = false;
+            isMuted = false;
+            muteBtn.textContent = value === 0 ? '🔇' : '🔊';
+        });
+
+        video.addEventListener('click', function() {
+            if (video.paused) {
+                video.play();
+                if (video.muted) {
+                    video.muted = false;
+                    isMuted = false;
+                    muteBtn.textContent = '🔊';
+                }
+            } else {
+                video.pause();
+            }
+        });
+
+        // ============================================
+        // SCROLL ANIMATIONS WITH ANIME.JS
+        // ============================================
+        const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -30px 0px' };
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !entry.target.hasAttribute('data-animated')) {
+                    entry.target.setAttribute('data-animated', 'true');
+                    const delay = parseInt(entry.target.getAttribute('data-delay') || 0);
+                    const animType = entry.target.getAttribute('data-animate-type') || 'up';
+                    let fromProps = { opacity: [0, 1] };
+                    if (animType === 'left') { fromProps.translateX = [-60, 0]; }
+                    else if (animType === 'right') { fromProps.translateX = [60, 0]; }
+                    else if (animType === 'scale') { fromProps.scale = [0.85, 1]; fromProps.translateY = [20, 0]; }
+                    else if (animType === 'rotate') { fromProps.rotate = [-10, 0]; fromProps.scale = [0.85, 1]; fromProps.translateY = [20, 0]; }
+                    else if (animType === 'fade') { fromProps = { opacity: [0, 1] }; }
+                    else { fromProps.translateY = [40, 0]; }
+                    anime({ targets: entry.target, ...fromProps, duration: 800, delay: delay, easing: 'easeOutQuart' });
+                }
+            });
+        }, observerOptions);
+        document.querySelectorAll('[data-scroll-animate]').forEach(el => observer.observe(el));
+
+        // ============================================
+        // GALLERY TABS - FILTER
+        // ============================================
+        const tabs = document.querySelectorAll('.gallery-tab');
+        const galleryItems = document.querySelectorAll('.gallery-item');
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                tabs.forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                
+                const filter = this.getAttribute('data-filter');
+                
+                galleryItems.forEach(item => {
+                    if (filter === 'all' || item.getAttribute('data-type') === filter) {
+                        item.style.display = 'block';
+                        setTimeout(() => {
+                            item.style.opacity = '1';
+                            item.style.transform = 'scale(1)';
+                        }, 50);
+                    } else {
+                        item.style.opacity = '0';
+                        item.style.transform = 'scale(0.8)';
+                        setTimeout(() => {
+                            item.style.display = 'none';
+                        }, 300);
+                    }
+                });
+            });
+        });
+
+        // ============================================
+        // LIGHTBOX - Click to enlarge
+        // ============================================
+        const lightbox = document.getElementById('lightbox');
+        const lightboxContent = document.getElementById('lightboxContent');
+        const lightboxCaption = document.getElementById('lightboxCaption');
+        const closeLightbox = document.getElementById('closeLightbox');
+
+        galleryItems.forEach(item => {
+            item.addEventListener('click', function() {
+                const img = this.querySelector('img');
+                const video = this.querySelector('video');
+                const caption = this.querySelector('.gallery-overlay span')?.textContent || 'Gallery Item';
+                
+                lightboxContent.innerHTML = '';
+                lightboxCaption.textContent = caption;
+                
+                if (img) {
+                    const clone = document.createElement('img');
+                    clone.src = img.src;
+                    clone.alt = img.alt;
+                    lightboxContent.appendChild(clone);
+                } else if (video) {
+                    const clone = document.createElement('video');
+                    const src = video.querySelector('source')?.src || video.src;
+                    if (src) {
+                        clone.src = src;
+                        clone.controls = true;
+                        clone.autoplay = true;
+                        clone.style.maxWidth = '90%';
+                        clone.style.maxHeight = '85%';
+                        lightboxContent.appendChild(clone);
+                    } else {
+                        lightboxContent.innerHTML = '<div class="text-white text-center p-8">Video not available</div>';
+                    }
+                }
+                
+                lightbox.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
+        });
+
+        closeLightbox.addEventListener('click', function() {
+            lightbox.classList.remove('active');
+            document.body.style.overflow = '';
+            const video = lightboxContent.querySelector('video');
+            if (video) video.pause();
+        });
+
+        lightbox.addEventListener('click', function(e) {
+            if (e.target === this) {
+                lightbox.classList.remove('active');
+                document.body.style.overflow = '';
+                const video = lightboxContent.querySelector('video');
+                if (video) video.pause();
+            }
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && lightbox.classList.contains('active')) {
+                lightbox.classList.remove('active');
+                document.body.style.overflow = '';
+                const video = lightboxContent.querySelector('video');
+                if (video) video.pause();
+            }
+        });
+    </script>
+
+    <!-- ============================================ -->
+    <!-- CONTENT LOADER - Loads from localStorage -->
+    <!-- ============================================ -->
+    <script src="content-loader.js"></script>
+
+</body>
+</html>

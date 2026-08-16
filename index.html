@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Edmount Dharmagiri - Exclusive Residential Campus for Boys</title>
+    <link rel="icon" type="image/png" href="images/Untitled-removebg-preview.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        * { font-family: 'Poppins', sans-serif; margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
+        body { background: linear-gradient(135deg, #f0f4f8 0%, #d9e8f5 100%); min-height: 100vh; overflow-x: hidden; }
+        
+        .navbar { position: sticky; top: 0; z-index: 1000; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); background: rgba(255,255,255,0.92); box-shadow: 0 4px 20px rgba(0,51,102,0.08); padding: 8px 0; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        .navbar.scrolled { box-shadow: 0 8px 30px rgba(0,51,102,0.15); background: rgba(255,255,255,0.98); }
+        .nav-link { position: relative; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); font-size: 14px; }
+        .nav-link::after { content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 3px; background: linear-gradient(90deg, #003366, #10b981); transition: width 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); border-radius: 2px; }
+        .nav-link:hover { color: #003366; transform: translateY(-1px); }
+        .nav-link:hover::after { width: 100%; }
+        
+        .menu-btn { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 8px; background: none; border: none; transition: all 0.3s ease; }
+        .menu-btn:hover span { background: #10b981; }
+        .menu-btn span { width: 28px; height: 3px; background: #003366; border-radius: 3px; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        .menu-btn.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 6px); }
+        .menu-btn.active span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+        .menu-btn.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -6px); }
+        .mobile-menu { display: none; flex-direction: column; gap: 12px; padding: 16px 20px 20px; background: rgba(255,255,255,0.98); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-radius: 0 0 20px 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); animation: slideDown 0.3s ease; }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        .mobile-menu.open { display: flex; }
+        .mobile-menu a { color: #1e293b; font-weight: 500; padding: 10px 0; border-bottom: 1px solid rgba(0,51,102,0.06); transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        .mobile-menu a:hover { color: #003366; padding-left: 12px; border-color: #10b981; }
+        .mobile-menu a:last-child { border-bottom: none; }
+        
+        @media (max-width: 767px) {
+            .menu-btn { display: flex; }
+            .desktop-nav { display: none; }
+            .navbar .btn-primary { padding: 8px 14px; font-size: 12px; }
+        }
+        @media (min-width: 768px) {
+            .mobile-menu { display: none !important; }
+            .desktop-nav { display: flex !important; }
+        }
+        
+        [data-scroll-animate] { opacity: 0; }
+        
+        .program-card { background: white; border-radius: 20px; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); border: 1px solid rgba(0,51,102,0.06); overflow: hidden; cursor: default; position: relative; }
+        .program-card::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, #003366, #10b981); transform: scaleX(0); transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        .program-card:hover { transform: translateY(-14px) scale(1.02); box-shadow: 0 30px 60px rgba(0,51,102,0.2); border-color: rgba(16,185,129,0.4); }
+        .program-card:hover::after { transform: scaleX(1); }
+        .program-card:hover .icon-wrap { animation: iconFloat 0.6s ease; }
+        @keyframes iconFloat { 0%, 100% { transform: translateY(0) rotate(0deg); } 30% { transform: translateY(-8px) rotate(8deg); } 60% { transform: translateY(4px) rotate(-4deg); } }
+        .program-card:hover .learn-link { transform: translateX(6px); color: #003366; }
+        .program-card:active { transform: scale(0.97); }
+        .learn-link { display: inline-block; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        
+        .logo-hover { transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        .logo-container:hover .logo-hover { transform: rotate(8deg) scale(1.08); }
+        .logo-container:active .logo-hover { transform: rotate(5deg) scale(0.95); }
+        
+        .floating-bg { animation: float 6s ease-in-out infinite; }
+        @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-15px); } }
+        .floating-bg-2 { animation: float2 8s ease-in-out infinite; }
+        @keyframes float2 { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-20px); } }
+        
+        .btn-primary { background: linear-gradient(135deg, #003366, #1a4d7a); transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); position: relative; overflow: hidden; display: inline-block; }
+        .btn-primary::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: linear-gradient(45deg, transparent, rgba(255,255,255,0.15), transparent); transform: rotate(45deg) translateX(-100%); transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        .btn-primary:hover { transform: translateY(-3px) scale(1.03); box-shadow: 0 20px 50px rgba(0,51,102,0.4); }
+        .btn-primary:hover::before { transform: rotate(45deg) translateX(100%); }
+        .btn-primary:active { transform: scale(0.95); }
+        
+        .pulse { animation: pulse 2s ease-in-out infinite; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+        
+        .shimmer { background: linear-gradient(90deg, #003366, #10b981, #003366); background-size: 200% auto; animation: shimmer 3s linear infinite; -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        @keyframes shimmer { 0% { background-position: -200% center; } 100% { background-position: 200% center; } }
+        
+        .hero-title { font-size: clamp(1.8rem, 6vw, 4.5rem); line-height: 1.1; }
+        .section-title { font-size: clamp(1.5rem, 4vw, 3rem); }
+        .tagline { font-size: clamp(0.8rem, 1.5vw, 1.1rem); letter-spacing: 0.15em; }
+        
+        .social-link { transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); display: inline-flex; align-items: center; gap: 0.5rem; padding: 6px 12px; border-radius: 8px; }
+        .social-link:hover { transform: translateX(6px) scale(1.05); color: #10b981; background: rgba(16,185,129,0.08); }
+        .social-link:active { transform: scale(0.95); }
+
+        .slider-container { position: relative; overflow: hidden; border-radius: 16px; box-shadow: 0 12px 40px rgba(0,51,102,0.12); }
+        .slider-track { display: flex; transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94); will-change: transform; }
+        .slider-slide { min-width: 100%; position: relative; aspect-ratio: 16/9; overflow: hidden; }
+        .slider-slide img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        .slider-slide:hover img { transform: scale(1.05); }
+        
+        .slider-dots { display: flex; justify-content: center; gap: 10px; margin-top: 16px; }
+        .slider-dot { width: 12px; height: 12px; border-radius: 50%; background: #cbd5e1; cursor: pointer; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); border: 2px solid transparent; -webkit-tap-highlight-color: transparent; }
+        .slider-dot:hover { transform: scale(1.2); background: #94a3b8; }
+        .slider-dot.active { background: #003366; border-color: #10b981; transform: scale(1.2); }
+        .slider-dot:active { transform: scale(0.9); }
+        
+        .slider-btn { position: absolute; top: 50%; transform: translateY(-50%); width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.95); border: none; cursor: pointer; font-size: 16px; color: #003366; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: 0 4px 15px rgba(0,0,0,0.1); z-index: 10; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); touch-action: manipulation; }
+        .slider-btn:hover { background: white; transform: translateY(-50%) scale(1.1); box-shadow: 0 8px 30px rgba(0,0,0,0.2); }
+        .slider-btn:active { transform: translateY(-50%) scale(0.9); }
+        .slider-btn.prev { left: 10px; }
+        .slider-btn.next { right: 10px; }
+        
+        #particles-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
+        
+        .orb { display: none; }
+        @media (min-width: 768px) {
+            .orb { display: block; position: fixed; border-radius: 50%; pointer-events: none; z-index: -1; opacity: 0.06; will-change: transform; }
+            .orb-1 { width: 400px; height: 400px; background: radial-gradient(circle, #003366, transparent); top: -100px; right: -100px; animation: orbFloat 25s ease-in-out infinite; }
+            .orb-2 { width: 300px; height: 300px; background: radial-gradient(circle, #10b981, transparent); bottom: -80px; left: -80px; animation: orbFloat 30s ease-in-out infinite reverse; }
+            .orb-3 { width: 200px; height: 200px; background: radial-gradient(circle, #003366, transparent); top: 50%; left: 5%; animation: orbFloat 20s ease-in-out infinite 5s; }
+            @keyframes orbFloat { 0%, 100% { transform: translate(0, 0) scale(1) rotate(0deg); } 33% { transform: translate(50px, -40px) scale(1.1) rotate(120deg); } 66% { transform: translate(-30px, 30px) scale(0.9) rotate(240deg); } }
+        }
+        
+        .touch-feedback:active { transform: scale(0.97); transition: transform 0.1s ease; }
+        
+        .hero-badge { transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        .hero-badge:hover { transform: scale(1.05); box-shadow: 0 8px 25px rgba(16,185,129,0.2); }
+        
+        .mission-item { transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        .mission-item:hover { transform: translateX(6px) scale(1.02); background: rgba(255,255,255,0.15) !important; }
+        
+        .footer { background: linear-gradient(135deg, #0a1a2e, #003366); border-top: 4px solid #10b981; }
+        .footer-link { transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); display: inline-block; padding: 4px 0; }
+        .footer-link:hover { transform: translateX(6px); color: #10b981; }
+        .footer-social { transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); display: inline-flex; align-items: center; gap: 0.5rem; padding: 6px 12px; border-radius: 8px; }
+        .footer-social:hover { transform: translateX(6px) scale(1.05); color: #10b981; background: rgba(16,185,129,0.1); }
+        
+        .footer-brand { font-size: clamp(1.5rem, 3vw, 2.5rem); font-weight: 900; line-height: 1; }
+        .footer-brand-sub { font-size: clamp(0.7rem, 1vw, 0.9rem); letter-spacing: 0.2em; }
+        
+        .sister-card { transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); border-radius: 16px; overflow: hidden; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); padding: 16px; text-align: center; display: block; text-decoration: none; }
+        .sister-card:hover { transform: translateY(-6px) scale(1.03); box-shadow: 0 20px 50px rgba(0,0,0,0.3); border-color: rgba(16,185,129,0.3); }
+        .sister-card img { width: 100%; max-height: 80px; object-fit: contain; transition: transform 0.4s ease; }
+        .sister-card:hover img { transform: scale(1.05); }
+        .sister-card .sister-title { font-size: 1rem; font-weight: 700; color: white; margin-top: 6px; }
+        .sister-card .sister-sub { font-size: 0.75rem; color: #10b981; font-weight: 600; }
+        .sister-card .sister-desc { font-size: 0.65rem; color: #93c5fd; margin-top: 2px; }
+        
+        @media (max-width: 640px) {
+            .program-card { padding: 16px !important; }
+            .slider-btn { width: 32px; height: 32px; font-size: 12px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Particle Background -->
+    <canvas id="particles-canvas"></canvas>
+    
+    <!-- Floating Orbs -->
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
+    <!-- Navbar -->
+    <nav class="navbar" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-2 flex justify-between items-center">
+            <a href="index.html" class="flex items-center gap-2 sm:gap-3 logo-container">
+                <img src="images/Untitled-removebg-preview.png" alt="Edmount Dharmagiri Logo" class="w-8 sm:w-12 h-8 sm:h-12 object-contain logo-hover" />
+                <div class="hidden sm:block">
+                    <span class="text-lg sm:text-xl font-extrabold text-blue-900 block leading-none">Edmount</span>
+                    <span class="text-[10px] sm:text-xs font-bold text-emerald-600 tracking-wider uppercase">Dharmagiri</span>
+                    <span class="text-[8px] sm:text-[10px] font-bold text-blue-500 tracking-wider uppercase block">For Boys</span>
+                </div>
+                <div class="sm:hidden">
+                    <span class="text-base font-extrabold text-blue-900 block leading-tight">Edmount</span>
+                    <span class="text-[8px] font-bold text-emerald-600 tracking-wider uppercase">Dharmagiri</span>
+                </div>
+            </a>
+            
+            <div class="desktop-nav hidden md:flex gap-4 lg:gap-8">
+                <a href="index.html" class="nav-link text-blue-900 font-bold">Home</a>
+                <a href="about.html" class="nav-link text-gray-700 font-medium">About</a>
+                <a href="academics.html" class="nav-link text-gray-700 font-medium">Academics</a>
+                <a href="facilities.html" class="nav-link text-gray-700 font-medium">Facilities</a>
+                <a href="admission.html" class="nav-link text-gray-700 font-medium">Admission</a>
+            </div>
+            
+            <div class="flex items-center gap-2 sm:gap-3">
+                <a href="admission.html" class="btn-primary text-white px-3 sm:px-6 py-1.5 sm:py-2.5 rounded-lg font-semibold shadow-md text-xs sm:text-sm">Apply Now</a>
+                <button class="menu-btn md:hidden" id="menuBtn" aria-label="Toggle menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div class="mobile-menu md:hidden" id="mobileMenu">
+            <a href="index.html" class="text-blue-900 font-bold">Home</a>
+            <a href="about.html">About</a>
+            <a href="academics.html">Academics</a>
+            <a href="facilities.html">Facilities</a>
+            <a href="admission.html">Admission</a>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <header class="relative bg-gradient-to-b from-blue-50 to-slate-50 py-12 sm:py-20 md:py-28 text-center px-4 overflow-hidden" id="hero">
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-48 sm:w-80 md:w-96 h-48 sm:h-80 md:h-96 bg-blue-200/30 rounded-full blur-3xl -z-10 floating-bg"></div>
+        <div class="absolute bottom-0 right-0 w-36 sm:w-64 h-36 sm:h-64 bg-emerald-200/20 rounded-full blur-3xl -z-10 floating-bg-2"></div>
+        <div class="max-w-4xl mx-auto">
+            <div class="inline-block bg-emerald-100 text-emerald-700 px-3 sm:px-6 py-1 sm:py-2 rounded-full text-[10px] sm:text-sm font-bold mb-3 sm:mb-6 hero-badge" data-scroll-animate data-animate-type="scale">
+                🏆 Exclusive Residential Campus for Boys
+            </div>
+            <h1 class="hero-title font-black text-blue-950 leading-tight mb-3 sm:mb-6 hero-title" data-scroll-animate data-animate-type="fade" data-delay="100">
+                Where Ambition Meets <span class="shimmer">Opportunity</span>
+            </h1>
+            <p class="tagline text-slate-600 mb-3 sm:mb-6 max-w-3xl mx-auto px-2 hero-sub" data-scroll-animate data-animate-type="fade" data-delay="200">
+                Developing a robust aptitude-based foundation for students, offering specialized coaching for highly competitive entrance examinations.
+            </p>
+            <p class="text-xs sm:text-base text-slate-500 mb-4 sm:mb-8 max-w-2xl mx-auto px-2 hero-desc" data-scroll-animate data-animate-type="fade" data-delay="250">
+                Empowering students to pursue ambitious careers in Science, Engineering, Technology, Liberal Arts, and Finance.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center" data-scroll-animate data-animate-type="fade" data-delay="300">
+                <a href="academics.html" class="btn-primary text-white font-semibold px-6 sm:px-10 py-2.5 sm:py-4 rounded-xl text-sm sm:text-lg shadow-lg hero-btn-1">Explore Programs</a>
+                <a href="admission.html" class="border-2 border-blue-600 text-blue-600 font-semibold px-6 sm:px-10 py-2.5 sm:py-4 rounded-xl text-sm sm:text-lg hover:bg-blue-600 hover:text-white transition-all duration-300 hover:shadow-lg hover:scale-105 hero-btn-2">Apply Now</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Stats Section: REMOVED -->
+
+    <!-- Image Slider -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-16" id="slider-section">
+        <div class="text-center mb-6 sm:mb-12">
+            <span class="text-emerald-600 font-bold text-[10px] sm:text-sm uppercase tracking-wider slider-label" data-scroll-animate data-animate-type="fade">Our Campus</span>
+            <h2 class="section-title font-bold text-blue-950 mt-1 sm:mt-2 slider-title" data-scroll-animate data-animate-type="scale">Life at Edmount Dharmagiri</h2>
+            <p class="text-slate-500 mt-1 sm:mt-2 text-xs sm:text-base slider-desc" data-scroll-animate data-animate-type="fade" data-delay="100">Experience excellence in education and residential living</p>
+        </div>
+
+        <div class="slider-container slider-main" data-scroll-animate data-animate-type="scale">
+            <div class="slider-track" id="sliderTrack">
+                <div class="slider-slide">
+                    <img src="images/slider/slide1.jpg" alt="Edmount Dharmagiri Campus" loading="lazy" onerror="this.parentElement.innerHTML='<div class=flex items-center justify-center h-full bg-gradient-to-br from-blue-900 to-emerald-800 text-white text-2xl sm:text-4xl font-bold>📸</div>'" />
+                </div>
+                <div class="slider-slide">
+                    <img src="images/slider/slide2.jpg" alt="Edmount Dharmagiri Campus" loading="lazy" onerror="this.parentElement.innerHTML='<div class=flex items-center justify-center h-full bg-gradient-to-br from-emerald-800 to-blue-900 text-white text-2xl sm:text-4xl font-bold>📸</div>'" />
+                </div>
+                <div class="slider-slide">
+                    <img src="images/slider/slide3.jpg" alt="Edmount Dharmagiri Campus" loading="lazy" onerror="this.parentElement.innerHTML='<div class=flex items-center justify-center h-full bg-gradient-to-br from-blue-900 to-purple-800 text-white text-2xl sm:text-4xl font-bold>📸</div>'" />
+                </div>
+                <div class="slider-slide">
+                    <img src="images/slider/slide4.jpg" alt="Edmount Dharmagiri Campus" loading="lazy" onerror="this.parentElement.innerHTML='<div class=flex items-center justify-center h-full bg-gradient-to-br from-emerald-800 to-blue-900 text-white text-2xl sm:text-4xl font-bold>📸</div>'" />
+                </div>
+            </div>
+            <button class="slider-btn prev" id="prevBtn" aria-label="Previous slide">❮</button>
+            <button class="slider-btn next" id="nextBtn" aria-label="Next slide">❯</button>
+        </div>
+
+        <div class="slider-dots" id="sliderDots">
+            <span class="slider-dot active" data-index="0"></span>
+            <span class="slider-dot" data-index="1"></span>
+            <span class="slider-dot" data-index="2"></span>
+            <span class="slider-dot" data-index="3"></span>
+        </div>
+    </section>
+
+    <!-- Programs -->
+    <section class="py-8 sm:py-16 px-4 sm:px-6 max-w-7xl mx-auto" id="programs">
+        <div class="text-center mb-6 sm:mb-12">
+            <span class="text-emerald-600 font-bold text-[10px] sm:text-sm uppercase tracking-wider prog-label" data-scroll-animate data-animate-type="fade">Our Offerings</span>
+            <h2 class="section-title font-bold text-blue-950 mt-1 sm:mt-2 prog-title" data-scroll-animate data-animate-type="scale">Academic Programs</h2>
+            <p class="text-slate-500 mt-1 sm:mt-2 text-xs sm:text-base prog-desc" data-scroll-animate data-animate-type="fade" data-delay="100">Comprehensive pathways for every ambition</p>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+            <div class="program-card p-5 sm:p-8 prog-card" data-delay="0" data-scroll-animate data-animate-type="left">
+                <div class="icon-wrap text-3xl sm:text-5xl mb-2 sm:mb-4">🔬</div>
+                <h3 class="text-base sm:text-xl font-bold text-blue-900 mb-1 sm:mb-2">Science &amp; Engineering</h3>
+                <p class="text-slate-500 text-xs sm:text-sm leading-relaxed">Plus One &amp; Plus Two with integrated NEET/JEE coaching.</p>
+                <div class="mt-2 sm:mt-3 flex flex-wrap gap-1">
+                    <span class="bg-blue-50 text-blue-700 text-[8px] sm:text-[10px] px-2 py-0.5 rounded-full">NEET</span>
+                    <span class="bg-blue-50 text-blue-700 text-[8px] sm:text-[10px] px-2 py-0.5 rounded-full">JEE</span>
+                </div>
+                <a href="academics.html" class="learn-link inline-block mt-3 sm:mt-4 text-emerald-600 font-semibold text-xs sm:text-sm">Learn More →</a>
+            </div>
+            <div class="program-card p-5 sm:p-8 prog-card" data-delay="100" data-scroll-animate data-animate-type="scale">
+                <div class="icon-wrap text-3xl sm:text-5xl mb-2 sm:mb-4">📊</div>
+                <h3 class="text-base sm:text-xl font-bold text-blue-900 mb-1 sm:mb-2">Commerce &amp; Finance</h3>
+                <p class="text-slate-500 text-xs sm:text-sm leading-relaxed">Plus One &amp; Plus Two with CA/CMA foundation coaching.</p>
+                <div class="mt-2 sm:mt-3 flex flex-wrap gap-1">
+                    <span class="bg-emerald-50 text-emerald-700 text-[8px] sm:text-[10px] px-2 py-0.5 rounded-full">CA</span>
+                    <span class="bg-emerald-50 text-emerald-700 text-[8px] sm:text-[10px] px-2 py-0.5 rounded-full">CMA</span>
+                </div>
+                <a href="academics.html" class="learn-link inline-block mt-3 sm:mt-4 text-emerald-600 font-semibold text-xs sm:text-sm">Learn More →</a>
+            </div>
+            <div class="program-card p-5 sm:p-8 prog-card" data-delay="200" data-scroll-animate data-animate-type="right">
+                <div class="icon-wrap text-3xl sm:text-5xl mb-2 sm:mb-4">📚</div>
+                <h3 class="text-base sm:text-xl font-bold text-blue-900 mb-1 sm:mb-2">Liberal Arts &amp; Humanities</h3>
+                <p class="text-slate-500 text-xs sm:text-sm leading-relaxed">Foundation for Civil Services, Law, Journalism careers.</p>
+                <div class="mt-2 sm:mt-3 flex flex-wrap gap-1">
+                    <span class="bg-purple-50 text-purple-700 text-[8px] sm:text-[10px] px-2 py-0.5 rounded-full">UPSC</span>
+                    <span class="bg-purple-50 text-purple-700 text-[8px] sm:text-[10px] px-2 py-0.5 rounded-full">Law</span>
+                </div>
+                <a href="academics.html" class="learn-link inline-block mt-3 sm:mt-4 text-emerald-600 font-semibold text-xs sm:text-sm">Learn More →</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Choose Us -->
+    <section class="py-8 sm:py-16 px-4 sm:px-6 max-w-7xl mx-auto" id="mission">
+        <div class="bg-gradient-to-r from-blue-900 via-blue-800 to-emerald-900 text-white rounded-2xl sm:rounded-3xl p-5 sm:p-8 md:p-12 shadow-2xl relative overflow-hidden mission-box" data-scroll-animate data-animate-type="scale">
+            <div class="absolute -right-20 -bottom-20 w-40 sm:w-80 h-40 sm:h-80 bg-emerald-500/10 rounded-full blur-2xl floating-bg-2"></div>
+            <div class="absolute -left-20 -top-20 w-40 sm:w-80 h-40 sm:h-80 bg-blue-500/10 rounded-full blur-2xl floating-bg"></div>
+            <div class="relative z-10">
+                <div class="text-center mb-4 sm:mb-8">
+                    <span class="text-emerald-400 font-bold text-[10px] sm:text-sm uppercase tracking-wider mission-label" data-scroll-animate data-animate-type="fade">Our Mission</span>
+                    <h2 class="text-xl sm:text-3xl md:text-4xl font-black mt-1 mission-title" data-scroll-animate data-animate-type="scale">Empowering Future Leaders</h2>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-6">
+                    <div class="mission-item flex items-start gap-2 sm:gap-4 bg-white/5 backdrop-blur-sm p-3 sm:p-5 rounded-xl hover:bg-white/10 transition-all duration-300" data-delay="100" data-scroll-animate data-animate-type="left">
+                        <div class="w-6 h-6 sm:w-10 sm:h-10 rounded-full bg-emerald-500 text-white flex items-center justify-center font-bold flex-shrink-0 shadow-lg text-xs sm:text-base pulse">1</div>
+                        <div><h3 class="font-bold text-sm sm:text-lg">Aptitude-Based Foundation</h3><p class="text-blue-100 text-[10px] sm:text-xs">Robust foundations for competitive entrance exams</p></div>
+                    </div>
+                    <div class="mission-item flex items-start gap-2 sm:gap-4 bg-white/5 backdrop-blur-sm p-3 sm:p-5 rounded-xl hover:bg-white/10 transition-all duration-300" data-delay="150" data-scroll-animate data-animate-type="right">
+                        <div class="w-6 h-6 sm:w-10 sm:h-10 rounded-full bg-emerald-500 text-white flex items-center justify-center font-bold flex-shrink-0 shadow-lg text-xs sm:text-base pulse">2</div>
+                        <div><h3 class="font-bold text-sm sm:text-lg">Ambitious Career Pathways</h3><p class="text-blue-100 text-[10px] sm:text-xs">Science, Engineering, Technology, Liberal Arts &amp; Finance</p></div>
+                    </div>
+                    <div class="mission-item flex items-start gap-2 sm:gap-4 bg-white/5 backdrop-blur-sm p-3 sm:p-5 rounded-xl hover:bg-white/10 transition-all duration-300" data-delay="200" data-scroll-animate data-animate-type="left">
+                        <div class="w-6 h-6 sm:w-10 sm:h-10 rounded-full bg-emerald-500 text-white flex items-center justify-center font-bold flex-shrink-0 shadow-lg text-xs sm:text-base pulse">3</div>
+                        <div><h3 class="font-bold text-sm sm:text-lg">Global Career Placement</h3><p class="text-blue-100 text-[10px] sm:text-xs">Dream jobs in Public Sector or Multinational Companies</p></div>
+                    </div>
+                    <div class="mission-item flex items-start gap-2 sm:gap-4 bg-white/5 backdrop-blur-sm p-3 sm:p-5 rounded-xl hover:bg-white/10 transition-all duration-300" data-delay="250" data-scroll-animate data-animate-type="right">
+                        <div class="w-6 h-6 sm:w-10 sm:h-10 rounded-full bg-emerald-500 text-white flex items-center justify-center font-bold flex-shrink-0 shadow-lg text-xs sm:text-base pulse">4</div>
+                        <div><h3 class="font-bold text-sm sm:text-lg">Holistic Development</h3><p class="text-blue-100 text-[10px] sm:text-xs">Character building, leadership, and moral values</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="py-8 sm:py-16 px-4 sm:px-6 text-center max-w-4xl mx-auto cta-section" data-scroll-animate data-animate-type="scale">
+        <div class="relative">
+            <div class="absolute -top-8 sm:-top-10 left-1/2 -translate-x-1/2 w-40 sm:w-64 h-40 sm:h-64 bg-emerald-200/20 rounded-full blur-2xl"></div>
+            <h2 class="text-xl sm:text-3xl md:text-4xl font-extrabold text-blue-900 mb-2 sm:mb-4 cta-title">Ready to Build Your Future?</h2>
+            <p class="text-sm sm:text-lg text-gray-700 mb-4 sm:mb-8 cta-desc px-2">Join Edmount Dharmagiri and embark on a journey to your dream career</p>
+            <a href="admission.html" class="btn-primary text-white px-6 sm:px-12 py-2.5 sm:py-4 rounded-xl font-bold shadow-xl inline-block text-sm sm:text-lg">Apply Today 🚀</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
+            
+            <div class="text-center mb-10">
+                <div class="flex items-center justify-center gap-3 mb-2">
+                    <img src="images/Untitled-removebg-preview.png" alt="Edmount Dharmagiri Logo" class="w-12 sm:w-16 h-12 sm:h-16 object-contain" />
+                    <div>
+                        <div class="footer-brand">EDMOUNT <span class="text-emerald-400">DHARMAGIRI</span></div>
+                        <div class="footer-brand-sub text-emerald-400 tracking-[0.3em]">FOR BOYS</div>
+                    </div>
+                </div>
+                <p class="text-blue-300 text-sm mt-2">Residential School with Moral &amp; Modern Education</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-12">
+                
+                <!-- Quick Links -->
+                <div>
+                    <h4 class="text-emerald-400 font-bold text-lg mb-4 border-b border-emerald-400/20 pb-2">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="index.html" class="footer-link text-blue-200 hover:text-emerald-400">Home</a></li>
+                        <li><a href="about.html" class="footer-link text-blue-200 hover:text-emerald-400">About Us</a></li>
+                        <li><a href="academics.html" class="footer-link text-blue-200 hover:text-emerald-400">Academic</a></li>
+                        <li><a href="facilities.html" class="footer-link text-blue-200 hover:text-emerald-400">Facilities</a></li>
+                        <li><a href="admission.html" class="footer-link text-blue-200 hover:text-emerald-400">Admission</a></li>
+                        <li><a href="#" class="footer-link text-blue-200 hover:text-emerald-400">Work With Us</a></li>
+                    </ul>
+                </div>
+
+                <!-- Follow Us with Real Logos -->
+                <div>
+                    <h4 class="text-emerald-400 font-bold text-lg mb-4 border-b border-emerald-400/20 pb-2">Follow Us</h4>
+                    <ul class="space-y-2">
+                        <li>
+                            <a href="https://www.instagram.com/edmount_dharmagiri/" target="_blank" rel="noopener noreferrer" class="footer-social text-blue-200 hover:text-emerald-400 transition-colors duration-300 text-sm flex items-center gap-3">
+                                <i class="fab fa-instagram text-xl w-6 text-center"></i> Instagram
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.facebook.com/people/Edmount-Dharmagiri/61572533090786/" target="_blank" rel="noopener noreferrer" class="footer-social text-blue-200 hover:text-emerald-400 transition-colors duration-300 text-sm flex items-center gap-3">
+                                <i class="fab fa-facebook text-xl w-6 text-center"></i> Facebook
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.youtube.com/@EdmountDharmagiri" target="_blank" rel="noopener noreferrer" class="footer-social text-blue-200 hover:text-emerald-400 transition-colors duration-300 text-sm flex items-center gap-3">
+                                <i class="fab fa-youtube text-xl w-6 text-center"></i> YouTube
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="footer-social text-blue-200 hover:text-emerald-400 transition-colors duration-300 text-sm flex items-center gap-3">
+                                <i class="fab fa-linkedin-in text-xl w-6 text-center"></i> LinkedIn
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Contact Us -->
+                <div>
+                    <h4 class="text-emerald-400 font-bold text-lg mb-4 border-b border-emerald-400/20 pb-2">Contact Us</h4>
+                    <ul class="space-y-3">
+                        <li class="flex items-start gap-3 text-blue-200 text-sm">
+                            <span class="text-emerald-400 mt-1">📍</span>
+                            <span>Dharmagiri Hills, near Calicut International Airport, Kannamangalam, Malappuram Dt. PIN - 676305</span>
+                        </li>
+                        <li class="flex items-center gap-3 text-blue-200 text-sm">
+                            <span class="text-emerald-400">📞</span>
+                            <span>+91-9895644544</span>
+                        </li>
+                        <li class="flex items-center gap-3 text-blue-200 text-sm">
+                            <span class="text-emerald-400">📞</span>
+                            <span>+91-7736911511</span>
+                        </li>
+                        <li class="flex items-center gap-3 text-blue-200 text-sm">
+                            <span class="text-emerald-400">✉️</span>
+                            <span>edmountdharmagiri@gmail.com</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Our Group -->
+                <div>
+                    <h4 class="text-emerald-400 font-bold text-lg mb-4 border-b border-emerald-400/20 pb-2">Our Group</h4>
+                    <a href="https://mountzaindharmagiri.com/" target="_blank" rel="noopener noreferrer" class="sister-card mb-3">
+                        <img src="images/mount-zain.png" alt="Mount Zain - Dharmagiri" class="mx-auto" />
+                        <div class="sister-title">MOUNT ZAIN</div>
+                        <div class="sister-sub">DHARMAGIRI</div>
+                        <div class="sister-desc">Elite &amp; Exclusive Educational Programs for Girls</div>
+                    </a>
+                    <div class="sister-card">
+                        <img src="images/dharmagiri-group.png" alt="Dharmagiri Group of Institutions" class="mx-auto" />
+                        <div class="sister-title">DHARMAGIRI</div>
+                        <div class="sister-sub">GROUP OF INSTITUTIONS</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="border-t border-blue-800 mt-10 pt-6 text-center text-blue-400 text-sm">
+                <p>&copy; 2026 <span class="text-white font-semibold">Edmount Dharmagiri</span>. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // ============================================
+        // MOBILE MENU TOGGLE
+        // ============================================
+        const menuBtn = document.getElementById('menuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        let menuOpen = false;
+
+        menuBtn.addEventListener('click', function() {
+            menuOpen = !menuOpen;
+            this.classList.toggle('active');
+            mobileMenu.classList.toggle('open');
+            document.body.style.overflow = menuOpen ? 'hidden' : '';
+        });
+
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                menuBtn.classList.remove('active');
+                mobileMenu.classList.remove('open');
+                document.body.style.overflow = '';
+                menuOpen = false;
+            });
+        });
+
+        // ============================================
+        // NAVBAR SCROLL EFFECT
+        // ============================================
+        window.addEventListener('scroll', function() {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // ============================================
+        // PARTICLE BACKGROUND
+        // ============================================
+        const canvas = document.getElementById('particles-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        let mouseX = 0;
+        let mouseY = 0;
+        const isMobile = window.innerWidth < 768;
+        const particleCount = isMobile ? 35 : 60;
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2 + 0.5;
+                this.speedX = (Math.random() - 0.5) * 0.3;
+                this.speedY = (Math.random() - 0.5) * 0.3;
+                this.opacity = Math.random() * 0.3 + 0.15;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.x > canvas.width) this.x = 0;
+                if (this.x < 0) this.x = canvas.width;
+                if (this.y > canvas.height) this.y = 0;
+                if (this.y < 0) this.y = canvas.height;
+                if (!isMobile) {
+                    const dx = mouseX - this.x;
+                    const dy = mouseY - this.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 150) {
+                        const force = (150 - dist) / 150;
+                        this.x -= dx * force * 0.015;
+                        this.y -= dy * force * 0.015;
+                    }
+                }
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(0, 51, 102, ${this.opacity})`;
+                ctx.fill();
+            }
+        }
+
+        for (let i = 0; i < particleCount; i++) {
+            particles.push(new Particle());
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => { p.update(); p.draw(); });
+            if (!isMobile) {
+                for (let i = 0; i < particles.length; i++) {
+                    for (let j = i + 1; j < particles.length; j++) {
+                        const dx = particles[i].x - particles[j].x;
+                        const dy = particles[i].y - particles[j].y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        if (dist < 100) {
+                            ctx.beginPath();
+                            ctx.moveTo(particles[i].x, particles[i].y);
+                            ctx.lineTo(particles[j].x, particles[j].y);
+                            ctx.strokeStyle = `rgba(0, 51, 102, ${0.08 * (1 - dist / 100)})`;
+                            ctx.lineWidth = 0.5;
+                            ctx.stroke();
+                        }
+                    }
+                }
+            }
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+
+        // ============================================
+        // SCROLL ANIMATIONS WITH ANIME.JS
+        // ============================================
+        const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -30px 0px' };
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !entry.target.hasAttribute('data-animated')) {
+                    entry.target.setAttribute('data-animated', 'true');
+                    const delay = parseInt(entry.target.getAttribute('data-delay') || 0);
+                    const animType = entry.target.getAttribute('data-animate-type') || 'up';
+                    let fromProps = { opacity: [0, 1] };
+                    if (animType === 'left') { fromProps.translateX = [-60, 0]; }
+                    else if (animType === 'right') { fromProps.translateX = [60, 0]; }
+                    else if (animType === 'scale') { fromProps.scale = [0.85, 1]; fromProps.translateY = [20, 0]; }
+                    else if (animType === 'rotate') { fromProps.rotate = [-10, 0]; fromProps.scale = [0.85, 1]; fromProps.translateY = [20, 0]; }
+                    else if (animType === 'fade') { fromProps = { opacity: [0, 1] }; }
+                    else { fromProps.translateY = [40, 0]; }
+                    anime({ targets: entry.target, ...fromProps, duration: 800, delay: delay, easing: 'easeOutQuart' });
+                }
+            });
+        }, observerOptions);
+        document.querySelectorAll('[data-scroll-animate]').forEach(el => observer.observe(el));
+
+        // ============================================
+        // IMAGE SLIDER
+        // ============================================
+        const track = document.getElementById('sliderTrack');
+        const slides = track.querySelectorAll('.slider-slide');
+        const dots = document.querySelectorAll('.slider-dot');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        let currentIndex = 0;
+        const totalSlides = slides.length;
+        let autoPlayInterval;
+        let isTransitioning = false;
+
+        function goToSlide(index) {
+            if (isTransitioning) return;
+            isTransitioning = true;
+            if (index < 0) index = totalSlides - 1;
+            if (index >= totalSlides) index = 0;
+            currentIndex = index;
+            track.style.transform = `translateX(-${currentIndex * 100}%)`;
+            dots.forEach((dot, i) => dot.classList.toggle('active', i === currentIndex));
+            setTimeout(() => { isTransitioning = false; }, 800);
+        }
+
+        function nextSlide() { if (!isTransitioning) { goToSlide(currentIndex + 1); resetAutoPlay(); } }
+        function prevSlide() { if (!isTransitioning) { goToSlide(currentIndex - 1); resetAutoPlay(); } }
+
+        let touchStartX = 0;
+        const sliderContainer = document.querySelector('.slider-container');
+
+        sliderContainer.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, { passive: true });
+
+        sliderContainer.addEventListener('touchend', (e) => {
+            const diff = touchStartX - e.changedTouches[0].screenX;
+            if (Math.abs(diff) > 30) {
+                diff > 0 ? nextSlide() : prevSlide();
+            }
+        }, { passive: true });
+
+        nextBtn.addEventListener('click', nextSlide);
+        prevBtn.addEventListener('click', prevSlide);
+        
+        dots.forEach((dot, index) => {
+            dot.addEventListener('click', () => { 
+                if (!isTransitioning && index !== currentIndex) {
+                    goToSlide(index); 
+                    resetAutoPlay(); 
+                }
+            });
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') nextSlide();
+            if (e.key === 'ArrowLeft') prevSlide();
+        });
+
+        function startAutoPlay() {
+            autoPlayInterval = setInterval(() => { if (!isTransitioning) goToSlide(currentIndex + 1); }, 4000);
+        }
+        function resetAutoPlay() { clearInterval(autoPlayInterval); startAutoPlay(); }
+
+        sliderContainer.addEventListener('mouseenter', () => clearInterval(autoPlayInterval));
+        sliderContainer.addEventListener('mouseleave', startAutoPlay);
+
+        goToSlide(0);
+        startAutoPlay();
+
+        // ============================================
+        // RESPONSIVE RESIZE HANDLER
+        // ============================================
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                const newIsMobile = window.innerWidth < 768;
+                if (newIsMobile !== isMobile) {
+                    particles = [];
+                    const newCount = newIsMobile ? 35 : 60;
+                    for (let i = 0; i < newCount; i++) {
+                        particles.push(new Particle());
+                    }
+                }
+            }, 500);
+        });
+    </script>
+
+    <!-- ============================================ -->
+    <!-- CONTENT LOADER - Loads from localStorage -->
+    <!-- ============================================ -->
+    <script src="content-loader.js"></script>
+
+</body>
+</html>
+<!-- ASPECT DIGITALS  . CO  -->
+ <!-- AR61 -->

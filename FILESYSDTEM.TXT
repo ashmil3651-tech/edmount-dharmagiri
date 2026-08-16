@@ -1,0 +1,44 @@
+edmount-dharmagiri/
+│
+├── index.html
+├── about.html
+├── academics.html
+├── facilities.html
+├── admission.html
+├── content-loader.js
+├── admin-save.html
+│
+└── images/
+    │
+    ├── Untitled-removebg-preview.png          ← MAIN LOGO (512×512px)
+    │
+    ├── mount-zain.png                ← MOUNT ZAIN LOGO (200×80px)
+    ├── dharmagiri-group.png                    ← GROUP OF INSTITUTIONS LOGO (200×80px)
+    │
+    ├── slider/                                 ← HOMEPAGE SLIDER IMAGES
+    │   ├── slide1.jpg                          (1920×1080px)
+    │   ├── slide2.jpg                          (1920×1080px)
+    │   ├── slide3.jpg                          (1920×1080px)
+    │   └── slide4.jpg                          (1920×1080px)
+
+    ├── team/                                   ← CORE TEAM PHOTOS
+    │   ├── director.jpg                        (400×400px)
+    │   ├── principal.jpg                       (400×400px)
+    │   └── coordinator.jpg                     (400×400px)
+    │
+    ├── gallery/                                ← FACILITIES PAGE GALLERY
+    │   ├── campus1.jpg                         (800×800px)
+    │   ├── campus2.jpg                         (800×800px)
+    │   ├── academics1.jpg                      (800×800px)
+    │   ├── academics2.jpg                      (800×800px)
+    │   ├── sports1.jpg                         (800×800px)
+    │   ├── sports2.jpg                         (800×800px)
+    │   ├── hostel1.jpg                         (800×800px)
+    │   ├── hostel2.jpg   -                      (800×800px)
+    │   ├── events1.jpg  -                  (800×800px)
+    │   └── events2.jpg  -                       (800×800px)
+    │
+    └── videos/                                 ← VIDEO FILES
+        ├── campus-tour.mp4                     (10-20MB, 720p/1080p)
+        ├── campus-life.mp4                     (10-20MB, 720p/1080p)
+        └── sports-day.mp4                      (10-20MB, 720p/1080p)

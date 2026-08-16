@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Edmount Dharmagiri</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        * { font-family: 'Segoe UI', Arial, sans-serif; }
+        body { background: #f0f4f8; padding: 20px; }
+        .container { max-width: 900px; margin: 0 auto; background: white; padding: 30px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+        h1 { color: #003366; }
+        .subtitle { color: #64748b; margin-bottom: 20px; }
+        input, textarea { width: 100%; padding: 10px 12px; margin: 4px 0 14px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; transition: all 0.3s ease; }
+        input:focus, textarea:focus { outline: none; border-color: #10b981; box-shadow: 0 0 0 3px rgba(16,185,129,0.1); }
+        textarea { resize: vertical; min-height: 60px; }
+        .btn { padding: 10px 24px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; color: white; transition: all 0.3s ease; margin: 4px; }
+        .btn:hover { transform: translateY(-2px); }
+        .btn-save { background: #10b981; }
+        .btn-save:hover { background: #059669; box-shadow: 0 8px 25px rgba(16,185,129,0.3); }
+        .btn-check { background: #003366; }
+        .btn-check:hover { background: #1a4d7a; box-shadow: 0 8px 25px rgba(0,51,102,0.3); }
+        .btn-clear { background: #ef4444; }
+        .btn-clear:hover { background: #dc2626; box-shadow: 0 8px 25px rgba(239,68,68,0.3); }
+        .btn-reset { background: #f59e0b; }
+        .btn-reset:hover { background: #d97706; box-shadow: 0 8px 25px rgba(245,158,11,0.3); }
+        .success { color: #10b981; }
+        .error { color: #ef4444; }
+        .preview { background: #f8fafc; padding: 16px; border-radius: 8px; margin-top: 15px; font-size: 13px; max-height: 350px; overflow: auto; border: 1px solid #e2e8f0; }
+        .preview pre { font-family: 'Courier New', monospace; font-size: 12px; white-space: pre-wrap; word-break: break-all; margin: 0; }
+        .tab { display: inline-block; padding: 8px 20px; margin: 3px; border-radius: 8px; cursor: pointer; background: #e2e8f0; transition: all 0.3s ease; font-weight: 500; }
+        .tab:hover { background: #cbd5e1; }
+        .tab.active { background: #003366; color: white; }
+        .tab-content { display: none; padding: 20px 0; }
+        .tab-content.active { display: block; }
+        .badge { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; margin-left: 8px; }
+        .badge-blue { background: #dbeafe; color: #1e40af; }
+        .badge-green { background: #d1fae5; color: #065f46; }
+        .status-bar { padding: 12px 16px; border-radius: 8px; margin: 10px 0; display: none; }
+        .status-bar.show { display: block; }
+        .status-bar.success { background: #d1fae5; border: 1px solid #10b981; color: #065f46; }
+        .status-bar.error { background: #fee2e2; border: 1px solid #ef4444; color: #991b1b; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        @media (max-width: 600px) { .grid-2 { grid-template-columns: 1fr; } }
+        label { font-weight: 500; color: #334155; font-size: 14px; display: block; margin-bottom: 2px; }
+        .helper { font-size: 12px; color: #94a3b8; margin-top: -10px; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+        <div>
+            <h1>✏️ Admin Panel</h1>
+            <p class="subtitle">Edit content and save to localStorage</p>
+        </div>
+        <div>
+            <span class="badge badge-green" id="statusBadge">🟢 Connected</span>
+        </div>
+    </div>
+
+    <div id="statusBar" class="status-bar"></div>
+
+    <div style="margin: 15px 0; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px;">
+        <span class="tab active" onclick="showTab('home')">🏠 Home</span>
+        <span class="tab" onclick="showTab('about')">📖 About</span>
+        <span class="tab" onclick="showTab('facilities')">🏗️ Facilities</span>
+        <span class="tab" onclick="showTab('admission')">📝 Admission</span>
+    </div>
+
+    <!-- HOME TAB -->
+    <div id="tab-home" class="tab-content active">
+        <h3 style="color: #003366;">🏠 Home Page - Hero Section</h3>
+        <p style="color: #64748b; font-size: 14px;">Edit the main content that appears on the homepage</p>
+        
+        <div class="grid-2">
+            <div>
+                <label>Badge Text</label>
+                <input type="text" id="heroBadge" value="🏆 Exclusive Residential Campus for Boys">
+            </div>
+            <div>
+                <label>Button 1 (Explore Programs)</label>
+                <input type="text" id="heroBtn1" value="Explore Programs">
+            </div>
+        </div>
+        
+        <label>Hero Title</label>
+        <input type="text" id="heroTitle" value="Where Ambition Meets Opportunity">
+        
+        <label>Hero Subtitle</label>
+        <textarea id="heroSub" rows="2">Developing a robust aptitude-based foundation for students, offering specialized coaching for highly competitive entrance examinations.</textarea>
+        
+        <label>Hero Description</label>
+        <textarea id="heroDesc" rows="2">Empowering students to pursue ambitious careers in Science, Engineering, Technology, Liberal Arts, and Finance.</textarea>
+        
+        <label>Button 2 (Apply Now)</label>
+        <input type="text" id="heroBtn2" value="Apply Now">
+    </div>
+
+    <!-- ABOUT TAB -->
+    <div id="tab-about" class="tab-content">
+        <h3 style="color: #003366;">📖 About Page - Principal's Message</h3>
+        <p style="color: #64748b; font-size: 14px;">Edit the principal's message displayed on the about page</p>
+        
+        <label>Principal's Message</label>
+        <textarea id="principalMessage" rows="8">We are delighted to welcome you to Dharmagiri Group of Institutions, home to Edmount Dharmagiri for boys.
+
+Here at Edmount, we are inspiring young men to dream big and achieve great things. But education for us is creating brilliant, responsible, and kind-hearted individuals who are ready to take on the world with confidence and compassion.
+
+We are proud to offer a learning environment that's both challenging and nurturing, where every boy is encouraged to discover his strengths and reach his full potential.</textarea>
+        
+        <div class="grid-2">
+            <div>
+                <label>Signature</label>
+                <input type="text" id="principalSignature" value="Principal">
+            </div>
+            <div>
+                <label>Institution Name</label>
+                <input type="text" id="principalInstitution" value="EDMOUNT DHARMAGIRI">
+            </div>
+        </div>
+    </div>
+
+    <!-- FACILITIES TAB -->
+    <div id="tab-facilities" class="tab-content">
+        <h3 style="color: #003366;">🏗️ Facilities Page - Video</h3>
+        <p style="color: #64748b; font-size: 14px;">Edit the video that appears on the facilities page</p>
+        
+        <label>Video Source Path</label>
+        <input type="text" id="videoSrc" value="images/videos/campus-tour.mp4">
+        <p class="helper">Enter the path to your video file (e.g., images/videos/campus-tour.mp4)</p>
+        
+        <label>Video Title</label>
+        <input type="text" id="videoTitle" value="Experience Our Campus">
+        
+        <label>Video Description</label>
+        <input type="text" id="videoDesc" value="Take a virtual tour of our world-class facilities">
+    </div>
+
+    <!-- ADMISSION TAB -->
+    <div id="tab-admission" class="tab-content">
+        <h3 style="color: #003366;">📝 Admission Page - Contact Info</h3>
+        <p style="color: #64748b; font-size: 14px;">Edit contact information displayed on the admission page</p>
+        
+        <div class="grid-2">
+            <div>
+                <label>Phone 1</label>
+                <input type="text" id="contactPhone1" value="+91 77369 11511">
+            </div>
+            <div>
+                <label>Phone 2</label>
+                <input type="text" id="contactPhone2" value="+91 98956 44544">
+            </div>
+        </div>
+        
+        <label>Email Address</label>
+        <input type="text" id="contactEmail" value="idealdharmagiri@gmail.com">
+        
+        <label>Address</label>
+        <textarea id="contactAddress" rows="2">Dharmagiri Hills, near Calicut International Airport, Kannamangalam, Malappuram Dt. PIN - 676305</textarea>
+    </div>
+
+    <!-- Buttons -->
+    <div style="margin: 20px 0; padding-top: 20px; border-top: 2px solid #e2e8f0;">
+        <button class="btn btn-save" onclick="saveContent()">💾 Save All Changes</button>
+        <button class="btn btn-check" onclick="checkContent()">🔍 Check Content</button>
+        <button class="btn btn-reset" onclick="resetToDefault()">↺ Reset Default</button>
+        <button class="btn btn-clear" onclick="clearContent()">🗑️ Clear All</button>
+    </div>
+
+    <div id="message" style="margin: 10px 0;"></div>
+    <div id="preview" class="preview">Click "Check Content" to see saved data</div>
+
+    <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #e2e8f0;">
+        <p style="font-size: 13px; color: #94a3b8;">
+            💡 <strong>How to use:</strong> Edit any content above, click "Save All Changes", then open any HTML page (index.html, about.html, etc.) and refresh to see the changes.
+        </p>
+        <p style="font-size: 12px; color: #cbd5e1;">
+            ⚡ Make sure <strong>content-loader.js</strong> is included in every HTML page: <code>&lt;script src="content-loader.js"&gt;&lt;/script&gt;</code>
+        </p>
+    </div>
+</div>
+
+<script>
+    window.onload = function() {
+        loadSavedData();
+        checkContent();
+    };
+
+    function loadSavedData() {
+        const saved = localStorage.getItem('edmount_content');
+        if (saved) {
+            try {
+                const content = JSON.parse(saved);
+                
+                if (content.index?.hero) {
+                    document.getElementById('heroBadge').value = content.index.hero.badge || '';
+                    document.getElementById('heroTitle').value = content.index.hero.title || '';
+                    document.getElementById('heroSub').value = content.index.hero.subtitle || '';
+                    document.getElementById('heroDesc').value = content.index.hero.description || '';
+                    document.getElementById('heroBtn1').value = content.index.hero.button1 || 'Explore Programs';
+                    document.getElementById('heroBtn2').value = content.index.hero.button2 || 'Apply Now';
+                }
+                
+                if (content.about?.principal) {
+                    document.getElementById('principalMessage').value = content.about.principal.message || '';
+                    document.getElementById('principalSignature').value = content.about.principal.signature || 'Principal';
+                    document.getElementById('principalInstitution').value = content.about.principal.institution || 'EDMOUNT DHARMAGIRI';
+                }
+                
+                if (content.facilities?.video) {
+                    document.getElementById('videoSrc').value = content.facilities.video.src || '';
+                    document.getElementById('videoTitle').value = content.facilities.video.title || '';
+                    document.getElementById('videoDesc').value = content.facilities.video.description || '';
+                }
+                
+                if (content.admission?.contact) {
+                    document.getElementById('contactPhone1').value = content.admission.contact.phone1 || '';
+                    document.getElementById('contactPhone2').value = content.admission.contact.phone2 || '';
+                    document.getElementById('contactEmail').value = content.admission.contact.email || '';
+                    document.getElementById('contactAddress').value = content.admission.contact.address || '';
+                }
+                
+                console.log('✅ Data loaded from localStorage');
+            } catch(e) {
+                console.log('Error loading data:', e);
+            }
+        }
+    }
+
+    function saveContent() {
+        const content = {
+            index: {
+                hero: {
+                    badge: document.getElementById('heroBadge').value,
+                    title: document.getElementById('heroTitle').value,
+                    subtitle: document.getElementById('heroSub').value,
+                    description: document.getElementById('heroDesc').value,
+                    button1: document.getElementById('heroBtn1').value,
+                    button2: document.getElementById('heroBtn2').value
+                }
+            },
+            about: {
+                principal: {
+                    message: document.getElementById('principalMessage').value,
+                    signature: document.getElementById('principalSignature').value,
+                    institution: document.getElementById('principalInstitution').value
+                }
+            },
+            facilities: {
+                video: {
+                    src: document.getElementById('videoSrc').value,
+                    title: document.getElementById('videoTitle').value,
+                    description: document.getElementById('videoDesc').value
+                }
+            },
+            admission: {
+                contact: {
+                    phone1: document.getElementById('contactPhone1').value,
+                    phone2: document.getElementById('contactPhone2').value,
+                    email: document.getElementById('contactEmail').value,
+                    address: document.getElementById('contactAddress').value
+                }
+            }
+        };
+
+        localStorage.setItem('edmount_content', JSON.stringify(content));
+        localStorage.setItem('edmount_last_edit', new Date().toLocaleString());
+        
+        showStatus('✅ All content saved successfully!', 'success');
+        checkContent();
+        
+        console.log('✅ Content saved to localStorage');
+    }
+
+    function checkContent() {
+        const saved = localStorage.getItem('edmount_content');
+        const preview = document.getElementById('preview');
+        const message = document.getElementById('message');
+        
+        if (saved) {
+            try {
+                const content = JSON.parse(saved);
+                preview.innerHTML = `
+                    <strong>✅ Content found in localStorage</strong><br>
+                    <span style="color: #64748b;">📅 Last saved: ${localStorage.getItem('edmount_last_edit') || 'Unknown'}</span>
+                    <hr style="margin: 8px 0; border-color: #e2e8f0;">
+                    <pre>${JSON.stringify(content, null, 2)}</pre>
+                `;
+                message.innerHTML = '<span class="success">✅ Content loaded successfully</span>';
+                message.style.color = '#10b981';
+                document.getElementById('statusBadge').textContent = '🟢 Connected';
+                document.getElementById('statusBadge').className = 'badge badge-green';
+            } catch(e) {
+                preview.textContent = '❌ Error reading content: ' + e.message;
+                message.innerHTML = '<span class="error">❌ Error reading content</span>';
+                message.style.color = '#ef4444';
+            }
+        } else {
+            preview.textContent = '❌ No content found in localStorage';
+            message.innerHTML = '<span class="error">❌ No content found</span>';
+            message.style.color = '#ef4444';
+            document.getElementById('statusBadge').textContent = '🔴 Disconnected';
+            document.getElementById('statusBadge').className = 'badge-blue';
+        }
+    }
+
+    function resetToDefault() {
+        if (confirm('⚠️ Reset all content to default values?')) {
+            const defaultContent = {
+                index: {
+                    hero: {
+                        badge: "🏆 Exclusive Residential Campus for Boys",
+                        title: "Where Ambition Meets Opportunity",
+                        subtitle: "Developing a robust aptitude-based foundation for students, offering specialized coaching for highly competitive entrance examinations.",
+                        description: "Empowering students to pursue ambitious careers in Science, Engineering, Technology, Liberal Arts, and Finance.",
+                        button1: "Explore Programs",
+                        button2: "Apply Now"
+                    }
+                },
+                about: {
+                    principal: {
+                        message: "We are delighted to welcome you to Dharmagiri Group of Institutions, home to Edmount Dharmagiri for boys.\n\nHere at Edmount, we are inspiring young men to dream big and achieve great things. But education for us is creating brilliant, responsible, and kind-hearted individuals who are ready to take on the world with confidence and compassion.\n\nWe are proud to offer a learning environment that's both challenging and nurturing, where every boy is encouraged to discover his strengths and reach his full potential.",
+                        signature: "Principal",
+                        institution: "EDMOUNT DHARMAGIRI"
+                    }
+                },
+                facilities: {
+                    video: {
+                        src: "images/videos/campus-tour.mp4",
+                        title: "Experience Our Campus",
+                        description: "Take a virtual tour of our world-class facilities"
+                    }
+                },
+                admission: {
+                    contact: {
+                        phone1: "+91 77369 11511",
+                        phone2: "+91 98956 44544",
+                        email: "idealdharmagiri@gmail.com",
+                        address: "Dharmagiri Hills, near Calicut International Airport, Kannamangalam, Malappuram Dt. PIN - 676305"
+                    }
+                }
+            };
+
+            localStorage.setItem('edmount_content', JSON.stringify(defaultContent));
+            localStorage.setItem('edmount_last_edit', new Date().toLocaleString());
+            loadSavedData();
+            checkContent();
+            showStatus('↺ Reset to default values!', 'success');
+        }
+    }
+
+    function clearContent() {
+        if (confirm('⚠️ Clear all saved content? This cannot be undone.')) {
+            localStorage.removeItem('edmount_content');
+            localStorage.removeItem('edmount_last_edit');
+            loadSavedData();
+            checkContent();
+            showStatus('🗑️ All content cleared', 'error');
+        }
+    }
+
+    function showTab(tab) {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+        
+        document.querySelector(`.tab[onclick="showTab('${tab}')"]`).classList.add('active');
+        document.getElementById(`tab-${tab}`).classList.add('active');
+    }
+
+    function showStatus(message, type) {
+        const bar = document.getElementById('statusBar');
+        bar.textContent = message;
+        bar.className = 'status-bar show ' + type;
+        setTimeout(() => {
+            bar.classList.remove('show');
+        }, 4000);
+    }
+</script>
+
+</body>
+</html>
